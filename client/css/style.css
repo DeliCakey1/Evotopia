@@ -1,0 +1,214 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #111;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+  user-select: none;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background: #2d5a1e;
+}
+
+#startScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #1a3a10 0%, #0a1a05 100%);
+}
+
+.start-content {
+  text-align: center;
+}
+
+.game-title {
+  font-size: 72px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #7BC67E, #E8833A, #7B2D8E);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #8a9a7a;
+  margin-bottom: 32px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+#nameInput {
+  display: block;
+  width: 280px;
+  margin: 0 auto 16px;
+  padding: 14px 20px;
+  font-size: 18px;
+  border: 2px solid #4a7a3a;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#nameInput:focus {
+  border-color: #7BC67E;
+}
+
+#playBtn {
+  display: block;
+  width: 280px;
+  margin: 0 auto;
+  padding: 14px;
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4a9a3a, #2d7a1e);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#playBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 154, 58, 0.4);
+}
+
+#playBtn:active {
+  transform: translateY(0);
+}
+
+.hint {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #5a6a5a;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#hud {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  text-align: center;
+  pointer-events: none;
+}
+
+#tierDisplay {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ddd;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  letter-spacing: 1px;
+}
+
+#xpBarContainer {
+  width: 240px;
+  height: 10px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+#xpBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7BC67E, #4a9a3a);
+  border-radius: 5px;
+  transition: width 0.15s;
+}
+
+#xpText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+#leaderboard {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  background: rgba(0,0,0,0.6);
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-width: 160px;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.lb-header {
+  font-size: 12px;
+  font-weight: 700;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+#leaderboardList {
+  font-size: 13px;
+}
+
+.lb-entry {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  color: #ccc;
+}
+
+.lb-entry.me {
+  color: #7BC67E;
+  font-weight: 700;
+}
+
+.lb-entry .lb-rank {
+  color: #888;
+  margin-right: 8px;
+  min-width: 18px;
+}
+
+.lb-entry .lb-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lb-entry .lb-tier {
+  color: #999;
+  font-size: 11px;
+  margin-left: 8px;
+}

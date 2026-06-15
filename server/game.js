@@ -1,0 +1,73 @@
+const { MAX_FOOD, INITIAL_FOOD, FOOD_RESPAWN_PER_TICK, EAT_RANGE } = require('./config');
+const Food = require('./food');
+
+class Game {
+  constructor() {
+    this.players = new Map();
+    this.foods = new Map();
+    this.foodAccumulator = 0;
+    this.evolveEvents = [];
+    this.initFood();
+  }
+
+  initFood() {
+    for (let i = 0; i < INITIAL_FOOD; i++) {
+      const food = Food.random();
+      this.foods.set(food.id, food);
+    }
+  }
+
+  addPlayer(player) {
+    this.players.set(player.id, player);
+  }
+
+  removePlayer(playerId) {
+    this.players.delete(playerId);
+  }
+
+  update() {
+    this.evolveEvents = [];
+
+    for (const player of this.players.values()) {
+      player.update();
+    }
+
+    for (const player of this.players.values()) {
+      if (!player.alive) continue;
+      for (const [foodId, food] of this.foods) {
+        const dx = player.x - food.x;
+        const dy = player.y - food.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const eatRange = (player.size + food.size) * EAT_RANGE;
+        if (dist < eatRange) {
+          this.foods.delete(foodId);
+          const newTier = player.addXp(food.xp);
+          if (newTier >= 0) {
+            this.evolveEvents.push({ playerId: player.id, tier: newTier, tierName: player.tierName });
+          }
+        }
+      }
+    }
+
+    this.foodAccumulator += FOOD_RESPAWN_PER_TICK;
+    while (this.foodAccumulator >= 1 && this.foods.size < MAX_FOOD) {
+      this.foodAccumulator--;
+      const food = Food.random();
+      this.foods.set(food.id, food);
+    }
+  }
+
+  getState() {
+    const players = [];
+    for (const player of this.players.values()) {
+      players.push(player.serialize());
+    }
+    const foods = [];
+    for (const food of this.foods.values()) {
+      foods.push(food.serialize());
+    }
+    return { players, foods, evolves: this.evolveEvents };
+  }
+}
+
+module.exports = Game;

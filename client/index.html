@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evotopia</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="startScreen">
+    <div class="start-content">
+      <h1 class="game-title">Evotopia</h1>
+      <p class="subtitle">Eat. Grow. Evolve.</p>
+      <input type="text" id="nameInput" placeholder="Enter your name..." maxlength="20" autofocus>
+      <button id="playBtn">Play</button>
+      <p class="hint">Move with your mouse to control your character</p>
+    </div>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <div id="hud" class="hidden">
+    <div id="tierDisplay">Worm</div>
+    <div id="xpBarContainer">
+      <div id="xpBar"></div>
+      <span id="xpText">0 / 15</span>
+    </div>
+  </div>
+
+  <div id="leaderboard" class="hidden">
+    <div class="lb-header">Leaderboard</div>
+    <div id="leaderboardList"></div>
+  </div>
+
+  <script src="js/network.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
