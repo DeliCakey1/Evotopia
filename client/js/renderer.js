@@ -3,15 +3,7 @@ class Camera {
     this.canvas = canvas;
     this.x = 0;
     this.y = 0;
-    this.scale = 2.0;
-  }
-
-  screenToWorldX(sx) {
-    return (sx - this.canvas.width / 2) / this.scale + this.x;
-  }
-
-  screenToWorldY(sy) {
-    return (sy - this.canvas.height / 2) / this.scale + this.y;
+    this.scale = 1.5;
   }
 
   worldToScreenX(wx) {
@@ -20,10 +12,6 @@ class Camera {
 
   worldToScreenY(wy) {
     return (wy - this.y) * this.scale + this.canvas.height / 2;
-  }
-
-  get scaleSize() {
-    return this.scale;
   }
 }
 
@@ -34,75 +22,54 @@ class Renderer {
     this.camera = new Camera(canvas);
     this.smoothX = 0;
     this.smoothY = 0;
-    this.smoothScale = 2.0;
+    this.smoothScale = 1.5;
+    this.clouds = [];
     this.bgCanvas = null;
-    this.bgPattern = null;
+    this.initClouds();
+  }
+
+  initClouds() {
+    for (let i = 0; i < 40; i++) {
+      this.clouds.push({
+        x: Math.random() * 6000,
+        y: Math.random() * 3000 + 200,
+        w: 60 + Math.random() * 120,
+        h: 20 + Math.random() * 30,
+        speed: 0.1 + Math.random() * 0.2,
+        opacity: 0.15 + Math.random() * 0.25,
+      });
+    }
   }
 
   resize() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
-    this.buildBackground();
-  }
-
-  buildBackground() {
-    const w = 128;
-    const h = 128;
-    this.bgCanvas = document.createElement('canvas');
-    this.bgCanvas.width = w;
-    this.bgCanvas.height = h;
-    const bg = this.bgCanvas.getContext('2d');
-
-    bg.fillStyle = '#2d5a1e';
-    bg.fillRect(0, 0, w, h);
-
-    for (let i = 0; i < 60; i++) {
-      const gx = Math.random() * w;
-      const gy = Math.random() * h;
-      const shade = 30 + Math.random() * 25;
-      bg.fillStyle = 'rgba(' + shade + ',' + (shade + 60) + ',' + (shade + 10) + ',0.3)';
-      bg.fillRect(gx, gy, 2 + Math.random() * 3, 1 + Math.random() * 2);
-    }
-
-    for (let i = 0; i < 8; i++) {
-      const gx = Math.random() * w;
-      const gy = Math.random() * h;
-      bg.fillStyle = 'rgba(60, 120, 40, 0.15)';
-      bg.beginPath();
-      bg.arc(gx, gy, 8 + Math.random() * 16, 0, Math.PI * 2);
-      bg.fill();
-    }
   }
 
   updateCamera(followX, followY, playerSize) {
-    const targetScale = Math.max(1.2, 2.5 - (playerSize - 14) * 0.025);
-    this.smoothScale += (targetScale - this.smoothScale) * 0.08;
-
-    const targetX = followX;
-    const targetY = followY;
-    this.smoothX += (targetX - this.smoothX) * 0.1;
-    this.smoothY += (targetY - this.smoothY) * 0.1;
-
+    const targetScale = Math.max(0.8, 1.5 - (playerSize - 16) * 0.015);
+    this.smoothScale += (targetScale - this.smoothScale) * 0.05;
+    this.smoothX += (followX - this.smoothX) * 0.08;
+    this.smoothY += (followY - this.smoothY) * 0.08;
     this.camera.x = this.smoothX;
     this.camera.y = this.smoothY;
     this.camera.scale = this.smoothScale;
   }
 
   render(state, myId, mapWidth, mapHeight) {
-    const ctx = this.ctx;
-    const cam = this.camera;
+    const { ctx, camera: cam } = this;
     const w = this.canvas.width;
     const h = this.canvas.height;
 
-    ctx.fillStyle = '#1a3a10';
-    ctx.fillRect(0, 0, w, h);
+    this.drawSky(ctx, w, h);
 
     ctx.save();
     ctx.translate(w / 2, h / 2);
     ctx.scale(cam.scale, cam.scale);
     ctx.translate(-cam.x, -cam.y);
 
-    this.drawBackground(ctx, mapWidth, mapHeight);
+    this.drawClouds(ctx);
+    this.drawMapBorders(ctx, mapWidth, mapHeight);
 
     if (state.foods) {
       for (const food of state.foods) {
@@ -112,218 +79,506 @@ class Renderer {
 
     if (state.players) {
       for (const p of state.players) {
-        if (p.id === myId) {
-          this.drawPlayer(ctx, p, true);
-        } else {
-          this.drawPlayer(ctx, p, false);
-        }
+        this.drawPlayer(ctx, p, p.id === myId);
       }
     }
 
     ctx.restore();
   }
 
-  drawBackground(ctx, mapWidth, mapHeight) {
-    ctx.fillStyle = '#2d5a1e';
-    ctx.fillRect(-100, -100, mapWidth + 200, mapHeight + 200);
+  drawSky(ctx, w, h) {
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, '#0b1a3a');
+    grad.addColorStop(0.3, '#1a5276');
+    grad.addColorStop(0.6, '#5dade2');
+    grad.addColorStop(0.85, '#aed6f1');
+    grad.addColorStop(1, '#e8f4fd');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
 
-    const cam = this.camera;
-    const w = this.canvas.width;
-    const h = this.canvas.height;
-
-    const startX = Math.floor(cam.x - w / 2 / cam.scale - 50);
-    const startY = Math.floor(cam.y - h / 2 / cam.scale - 50);
-    const endX = Math.ceil(cam.x + w / 2 / cam.scale + 50);
-    const endY = Math.ceil(cam.y + h / 2 / cam.scale + 50);
-
-    if (this.bgCanvas) {
-      const bw = this.bgCanvas.width;
-      const bh = this.bgCanvas.height;
-      for (let bx = startX; bx < endX; bx += bw) {
-        for (let by = startY; by < endY; by += bh) {
-          ctx.drawImage(this.bgCanvas, bx, by, bw, bh);
-        }
-      }
-    }
-
-    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-    ctx.lineWidth = 1;
-    const gridSize = 100;
-    const gStartX = Math.max(0, Math.floor(startX / gridSize) * gridSize);
-    const gStartY = Math.max(0, Math.floor(startY / gridSize) * gridSize);
-    for (let gx = gStartX; gx <= Math.min(endX, mapWidth); gx += gridSize) {
+    for (let i = 0; i < 60; i++) {
+      const sx = Math.random() * w;
+      const sy = Math.random() * h * 0.5;
+      const sr = 0.5 + Math.random() * 1.5;
+      ctx.fillStyle = 'rgba(255,255,255,' + (0.1 + Math.random() * 0.3) + ')';
       ctx.beginPath();
-      ctx.moveTo(gx, Math.max(0, startY));
-      ctx.lineTo(gx, Math.min(endY, mapHeight));
-      ctx.stroke();
+      ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+      ctx.fill();
     }
-    for (let gy = gStartY; gy <= Math.min(endY, mapHeight); gy += gridSize) {
-      ctx.beginPath();
-      ctx.moveTo(Math.max(0, startX), gy);
-      ctx.lineTo(Math.min(endX, mapWidth), gy);
-      ctx.stroke();
-    }
+  }
 
-    ctx.strokeStyle = 'rgba(255,50,50,0.3)';
-    ctx.lineWidth = 3;
+  drawClouds(ctx) {
+    for (const c of this.clouds) {
+      c.x += c.speed;
+      if (c.x > 6000 + 200) c.x = -200;
+
+      ctx.globalAlpha = c.opacity;
+      ctx.fillStyle = '#ffffff';
+
+      const cx = c.x;
+      const cy = c.y;
+      const cw = c.w;
+      const ch = c.h;
+
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, cw * 0.4, ch * 0.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx - cw * 0.3, cy + ch * 0.1, cw * 0.35, ch * 0.4, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + cw * 0.25, cy + ch * 0.05, cw * 0.3, ch * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx - cw * 0.1, cy - ch * 0.15, cw * 0.25, ch * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  drawMapBorders(ctx, mapWidth, mapHeight) {
+    ctx.fillStyle = 'rgba(100,180,255,0.08)';
+    ctx.fillRect(0, 0, mapWidth, mapHeight);
+
+    ctx.strokeStyle = 'rgba(255,100,100,0.15)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([10, 10]);
     ctx.strokeRect(0, 0, mapWidth, mapHeight);
+    ctx.setLineDash([]);
+
+    const groundY = mapHeight - 60;
+    const grad = ctx.createLinearGradient(0, groundY, 0, mapHeight);
+    grad.addColorStop(0, 'rgba(34,120,50,0)');
+    grad.addColorStop(0.3, 'rgba(34,120,50,0.2)');
+    grad.addColorStop(1, 'rgba(20,80,30,0.4)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, groundY, mapWidth, 60);
+
+    for (let i = 0; i < mapWidth; i += 8) {
+      const hillY = groundY - 5 - Math.sin(i * 0.008) * 8 - Math.sin(i * 0.02) * 4;
+      ctx.fillStyle = 'rgba(30,100,40,0.15)';
+      ctx.fillRect(i, hillY, 8, groundY - hillY);
+    }
+
+    for (let i = 100; i < mapWidth; i += 120 + Math.sin(i * 0.1) * 40) {
+      const treeX = i;
+      const treeY = groundY - 5 - Math.sin(i * 0.008) * 8 - Math.sin(i * 0.02) * 4;
+      ctx.fillStyle = 'rgba(40,80,30,0.2)';
+      ctx.beginPath();
+      ctx.moveTo(treeX, treeY);
+      ctx.lineTo(treeX - 10, treeY + 18);
+      ctx.lineTo(treeX + 10, treeY + 18);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(treeX, treeY - 5);
+      ctx.lineTo(treeX - 8, treeY + 10);
+      ctx.lineTo(treeX + 8, treeY + 10);
+      ctx.fill();
+    }
   }
 
   drawFood(ctx, food) {
     ctx.save();
     ctx.translate(food.x, food.y);
-    ctx.globalAlpha = 0.9;
 
     const s = food.size;
-
-    ctx.fillStyle = food.color;
     ctx.shadowColor = food.color;
-    ctx.shadowBlur = 4;
+    ctx.shadowBlur = 6;
 
-    ctx.beginPath();
-    ctx.arc(0, 0, s, 0, Math.PI * 2);
-    ctx.fill();
+    if (food.type === 'insect') {
+      ctx.fillStyle = food.color;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, s, s * 0.6, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.beginPath();
+      ctx.ellipse(s * 0.6, -s * 0.2, s * 0.5, s * 0.15, 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(-s * 0.6, -s * 0.2, s * 0.5, s * 0.15, -0.3, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (food.type === 'star') {
+      ctx.fillStyle = food.color;
+      this.drawStar(ctx, 0, 0, s, s * 0.4, 5);
+    } else if (food.type === 'orb') {
+      ctx.fillStyle = food.color;
+      ctx.beginPath();
+      ctx.arc(0, 0, s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.beginPath();
+      ctx.arc(-s * 0.2, -s * 0.2, s * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = food.color;
+      ctx.beginPath();
+      ctx.arc(0, 0, s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.beginPath();
+      ctx.arc(-s * 0.2, -s * 0.2, s * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     ctx.shadowBlur = 0;
-
-    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    ctx.beginPath();
-    ctx.arc(-s * 0.25, -s * 0.25, s * 0.35, 0, Math.PI * 2);
-    ctx.fill();
-
     ctx.restore();
   }
 
-  drawPlayer(ctx, p, isMe) {
-    const s = p.size;
-    const a = p.angle;
+  drawStar(ctx, cx, cy, outerR, innerR, points) {
+    ctx.beginPath();
+    for (let i = 0; i < points * 2; i++) {
+      const r = i % 2 === 0 ? outerR : innerR;
+      const angle = (i * Math.PI) / points - Math.PI / 2;
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
 
+  drawPlayer(ctx, p, isMe) {
     ctx.save();
     ctx.translate(p.x, p.y);
-    ctx.rotate(a);
 
-    ctx.shadowColor = 'rgba(0,0,0,0.3)';
-    ctx.shadowBlur = 6;
+    if (!p.facingRight) {
+      ctx.scale(-1, 1);
+    }
 
-    this.drawAnimalShape(ctx, p, s);
+    ctx.shadowColor = 'rgba(0,0,0,0.2)';
+    ctx.shadowBlur = 8;
+
+    this.drawFlyingCreature(ctx, p, p.size);
 
     ctx.shadowBlur = 0;
-
-    ctx.rotate(-a);
-    ctx.translate(-p.x, -p.y);
+    ctx.restore();
 
     if (isMe) {
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, s + 3, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, p.size + 4, 0, Math.PI * 2);
       ctx.stroke();
     }
 
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold ' + Math.max(10, s * 0.9) + 'px sans-serif';
+    ctx.font = 'bold ' + Math.max(10, p.size * 0.7) + 'px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
     ctx.shadowColor = 'rgba(0,0,0,0.8)';
-    ctx.shadowBlur = 4;
-    ctx.fillText(p.name, p.x, p.y - s - 4);
-
+    ctx.shadowBlur = 3;
+    ctx.fillText(p.name, p.x, p.y - p.size - 6);
     ctx.shadowBlur = 0;
-    ctx.restore();
   }
 
-  drawAnimalShape(ctx, p, s) {
-    const bodyColor = p.color;
-    const darker = this.darken(bodyColor, 0.75);
-    const lighter = this.lighten(bodyColor, 1.2);
+  drawFlyingCreature(ctx, p, s) {
+    const tierName = p.tierName;
+    const color = p.color;
 
-    ctx.fillStyle = bodyColor;
+    switch (tierName) {
+      case 'Sparrow': this.drawSparrow(ctx, s, color); break;
+      case 'Crow': this.drawCrow(ctx, s, color); break;
+      case 'Hawk': this.drawHawk(ctx, s, color); break;
+      case 'Eagle': this.drawEagle(ctx, s, color); break;
+      case 'Phoenix': this.drawPhoenix(ctx, s, color); break;
+      case 'Dragon': this.drawDragon(ctx, s, color); break;
+      default: this.drawSparrow(ctx, s, color); break;
+    }
+  }
+
+  drawSparrow(ctx, s, color) {
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(0, 0, s, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, s * 0.5, s * 0.35, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = lighter;
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(-s * 0.15, -s * 0.2, s * 0.5, 0, Math.PI * 2);
+    ctx.moveTo(s * 0.4, -s * 0.1);
+    ctx.lineTo(s * 0.8, -s * 0.15);
+    ctx.lineTo(s * 0.4, -s * 0.5);
     ctx.fill();
 
-    ctx.fillStyle = '#fff';
     ctx.beginPath();
-    ctx.arc(s * 0.3, -s * 0.25, s * 0.22, 0, Math.PI * 2);
-    ctx.arc(-s * 0.3, -s * 0.25, s * 0.22, 0, Math.PI * 2);
+    ctx.moveTo(s * 0.4, s * 0.1);
+    ctx.lineTo(s * 0.8, s * 0.15);
+    ctx.lineTo(s * 0.4, s * 0.5);
+    ctx.fill();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.3, 0);
+    ctx.lineTo(-s * 0.8, s * 0.15);
+    ctx.lineTo(-s * 0.7, -s * 0.1);
+    ctx.fill();
+
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.3, -s * 0.05);
+    ctx.lineTo(s * 0.6, -s * 0.08);
+    ctx.lineTo(s * 0.3, s * 0.05);
+    ctx.fill();
+  }
+
+  drawCrow(ctx, s, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, s * 0.5, s * 0.35, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(s * 0.35, -s * 0.25);
+    ctx.lineTo(s * 0.3, -s * 0.7);
+    ctx.lineTo(s * 0.55, -s * 0.3);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(s * 0.35, s * 0.25);
+    ctx.lineTo(s * 0.3, s * 0.7);
+    ctx.lineTo(s * 0.55, s * 0.3);
+    ctx.fill();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.35, 0);
+    ctx.lineTo(-s * 0.75, s * 0.08);
+    ctx.lineTo(-s * 0.7, -s * 0.15);
+    ctx.fill();
+
+    ctx.fillStyle = '#333';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.35, -s * 0.08);
+    ctx.lineTo(s * 0.65, -s * 0.1);
+    ctx.lineTo(s * 0.3, s * 0.05);
+    ctx.fill();
+
+    ctx.fillStyle = '#111';
+    ctx.beginPath();
+    ctx.arc(s * 0.2, -s * 0.15, s * 0.08, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  drawHawk(ctx, s, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, s * 0.5, s * 0.35, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = this.darken(color, 0.8);
+    ctx.beginPath();
+    ctx.moveTo(s * 0.15, -s * 0.2);
+    ctx.lineTo(-s * 0.1, -s * 0.75);
+    ctx.lineTo(s * 0.4, -s * 0.35);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(s * 0.15, s * 0.2);
+    ctx.lineTo(-s * 0.1, s * 0.75);
+    ctx.lineTo(s * 0.4, s * 0.35);
+    ctx.fill();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.35, 0);
+    ctx.lineTo(-s * 0.75, s * 0.1);
+    ctx.lineTo(-s * 0.65, -s * 0.15);
+    ctx.fill();
+
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.35, -s * 0.05);
+    ctx.lineTo(s * 0.7, -s * 0.08);
+    ctx.lineTo(s * 0.35, s * 0.05);
     ctx.fill();
 
     ctx.fillStyle = '#222';
     ctx.beginPath();
-    ctx.arc(s * 0.35, -s * 0.2, s * 0.1, 0, Math.PI * 2);
-    ctx.arc(-s * 0.25, -s * 0.2, s * 0.1, 0, Math.PI * 2);
+    ctx.arc(s * 0.2, -s * 0.12, s * 0.07, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  drawEagle(ctx, s, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, s * 0.5, s * 0.38, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    const tierName = p.tierName || '';
-    if (tierName === 'Mouse' || tierName === 'Rabbit') {
-      ctx.fillStyle = bodyColor;
+    ctx.fillStyle = this.darken(color, 0.8);
+    ctx.beginPath();
+    ctx.moveTo(s * 0.1, -s * 0.2);
+    ctx.lineTo(-s * 0.2, -s * 0.85);
+    ctx.lineTo(s * 0.45, -s * 0.35);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(s * 0.1, s * 0.2);
+    ctx.lineTo(-s * 0.2, s * 0.85);
+    ctx.lineTo(s * 0.45, s * 0.35);
+    ctx.fill();
+
+    ctx.fillStyle = '#f5f5f5';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.2, -s * 0.05);
+    ctx.lineTo(s * 0.7, -s * 0.1);
+    ctx.lineTo(s * 0.4, 0);
+    ctx.fill();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.4, 0);
+    ctx.lineTo(-s * 0.8, s * 0.12);
+    ctx.lineTo(-s * 0.7, -s * 0.12);
+    ctx.fill();
+
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.35, -s * 0.06);
+    ctx.lineTo(s * 0.72, -s * 0.1);
+    ctx.lineTo(s * 0.35, s * 0.06);
+    ctx.fill();
+
+    ctx.fillStyle = '#222';
+    ctx.beginPath();
+    ctx.arc(s * 0.18, -s * 0.14, s * 0.08, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  drawPhoenix(ctx, s, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, s * 0.5, s * 0.38, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#FF9944';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.2, -s * 0.25);
+    ctx.lineTo(-s * 0.1, -s * 0.85);
+    ctx.lineTo(s * 0.45, -s * 0.3);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(s * 0.2, s * 0.25);
+    ctx.lineTo(-s * 0.1, s * 0.85);
+    ctx.lineTo(s * 0.45, s * 0.3);
+    ctx.fill();
+
+    for (let i = 0; i < 3; i++) {
+      const ty = -s * 0.35 - i * s * 0.15;
+      ctx.fillStyle = i % 2 === 0 ? '#FF6633' : '#FFD700';
       ctx.beginPath();
-      ctx.ellipse(s * 0.7, -s * 0.5, s * 0.2, s * 0.5, 0.2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(-s * 0.7, -s * 0.5, s * 0.2, s * 0.5, -0.2, 0, Math.PI * 2);
+      ctx.moveTo(s * 0.1, ty);
+      ctx.lineTo(-s * 0.45, ty - s * 0.1);
+      ctx.lineTo(-s * 0.35, ty + s * 0.05);
       ctx.fill();
     }
 
-    if (tierName === 'Fox') {
-      ctx.fillStyle = darker;
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.4, 0);
+    ctx.lineTo(-s * 0.9, s * 0.15);
+    ctx.lineTo(-s * 0.75, -s * 0.05);
+    ctx.lineTo(-s * 0.9, -s * 0.2);
+    ctx.fill();
+
+    for (let i = 0; i < 4; i++) {
+      const ty = s * 0.3 + i * s * 0.25;
+      ctx.fillStyle = i % 2 === 0 ? '#FF6633' : '#FFD700';
       ctx.beginPath();
-      ctx.moveTo(s * 0.8, -s * 0.3);
-      ctx.lineTo(s * 1.2, -s * 0.6);
-      ctx.lineTo(s * 0.7, -s * 0.6);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(-s * 0.8, -s * 0.3);
-      ctx.lineTo(-s * 1.2, -s * 0.6);
-      ctx.lineTo(-s * 0.7, -s * 0.6);
-      ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.beginPath();
-      ctx.moveTo(s * 0.8, -s * 0.3);
-      ctx.lineTo(s * 1.0, -s * 0.55);
-      ctx.lineTo(s * 0.6, -s * 0.55);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(-s * 0.8, -s * 0.3);
-      ctx.lineTo(-s * 1.0, -s * 0.55);
-      ctx.lineTo(-s * 0.6, -s * 0.55);
+      ctx.moveTo(-s * 0.2, ty);
+      ctx.quadraticCurveTo(-s * 0.6, ty + s * 0.15, -s * 0.3, ty + s * 0.3);
+      ctx.quadraticCurveTo(-s * 0.1, ty + s * 0.1, -s * 0.2, ty);
       ctx.fill();
     }
 
-    if (tierName === 'Wolf') {
-      ctx.fillStyle = '#ddd';
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.4, -s * 0.1);
+    ctx.lineTo(s * 0.8, -s * 0.05);
+    ctx.lineTo(s * 0.4, s * 0.1);
+    ctx.fill();
+
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(s * 0.2, -s * 0.15, s * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.05, -s * 0.45);
+    ctx.lineTo(s * 0.15, -s * 0.65);
+    ctx.lineTo(s * 0.25, -s * 0.45);
+    ctx.fill();
+  }
+
+  drawDragon(ctx, s, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, s * 0.5, s * 0.38, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = this.darken(color, 0.75);
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.1, -s * 0.15);
+    ctx.lineTo(-s * 0.4, -s * 0.85);
+    ctx.lineTo(s * 0.25, -s * 0.35);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.1, s * 0.15);
+    ctx.lineTo(-s * 0.4, s * 0.85);
+    ctx.lineTo(s * 0.25, s * 0.35);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.45, 0);
+    ctx.lineTo(-s * 0.9, s * 0.15);
+    ctx.lineTo(-s * 0.8, -s * 0.05);
+    ctx.lineTo(-s * 0.9, -s * 0.2);
+    ctx.fill();
+
+    for (let i = 0; i < 3; i++) {
+      const ty = s * 0.3 + i * s * 0.2;
+      ctx.fillStyle = this.darken(color, 0.7);
       ctx.beginPath();
-      ctx.arc(s * 0.35, -s * 0.15, s * 0.08, 0, Math.PI);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(-s * 0.35, -s * 0.15, s * 0.08, 0, Math.PI);
+      ctx.moveTo(-s * 0.15, ty);
+      ctx.lineTo(-s * 0.5, ty - s * 0.05);
+      ctx.lineTo(-s * 0.4, ty + s * 0.15);
+      ctx.lineTo(-s * 0.15, ty + s * 0.05);
       ctx.fill();
     }
 
-    if (tierName === 'Dragon') {
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = 0.7;
-      ctx.beginPath();
-      ctx.moveTo(s * 0.1, -s * 0.4);
-      ctx.lineTo(s * 0.9, -s * 0.9);
-      ctx.lineTo(s * 0.4, -s * 0.1);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(-s * 0.1, -s * 0.4);
-      ctx.lineTo(-s * 0.9, -s * 0.9);
-      ctx.lineTo(-s * 0.4, -s * 0.1);
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = '#FFD700';
-      ctx.beginPath();
-      ctx.arc(0, 0, s * 0.3, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    ctx.fillStyle = '#66FF66';
+    ctx.beginPath();
+    ctx.arc(s * 0.15, -s * 0.15, s * 0.1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#222';
+    ctx.beginPath();
+    ctx.arc(s * 0.15, -s * 0.15, s * 0.04, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#66FF66';
+    ctx.beginPath();
+    ctx.arc(s * 0.1, -s * 0.25, s * 0.03, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = this.darken(color, 0.6);
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.1, -s * 0.45);
+    ctx.lineTo(s * 0.05, -s * 0.6);
+    ctx.lineTo(s * 0.15, -s * 0.4);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(s * 0.0, -s * 0.5);
+    ctx.lineTo(s * 0.05, -s * 0.7);
+    ctx.lineTo(s * 0.2, -s * 0.45);
+    ctx.fill();
+
+    ctx.fillStyle = '#FF4444';
+    ctx.beginPath();
+    ctx.moveTo(s * 0.4, -s * 0.08);
+    ctx.lineTo(s * 0.75, -s * 0.02);
+    ctx.lineTo(s * 0.4, s * 0.08);
+    ctx.fill();
   }
 
   darken(hex, factor) {
@@ -331,12 +586,5 @@ class Renderer {
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return 'rgb(' + Math.floor(r * factor) + ',' + Math.floor(g * factor) + ',' + Math.floor(b * factor) + ')';
-  }
-
-  lighten(hex, factor) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return 'rgba(' + Math.min(255, Math.floor(r * factor)) + ',' + Math.min(255, Math.floor(g * factor)) + ',' + Math.min(255, Math.floor(b * factor)) + ',0.4)';
   }
 }

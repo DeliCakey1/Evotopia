@@ -1,21 +1,20 @@
 const EVOLUTION_TIERS = [
-  { name: 'Worm',     size: 14,  speed: 2.2, xpToNext: 15,  color: '#7BC67E' },
-  { name: 'Mouse',    size: 18,  speed: 2.8, xpToNext: 40,  color: '#B0A8A0' },
-  { name: 'Rabbit',   size: 24,  speed: 3.2, xpToNext: 80,  color: '#C4A882' },
-  { name: 'Fox',      size: 30,  speed: 3.8, xpToNext: 150, color: '#E8833A' },
-  { name: 'Wolf',     size: 36,  speed: 4.2, xpToNext: 250, color: '#7A7A7A' },
-  { name: 'Bear',     size: 44,  speed: 4.0, xpToNext: 400, color: '#5D4037' },
-  { name: 'Dragon',   size: 52,  speed: 4.5, xpToNext: -1,  color: '#7B2D8E' },
+  { name: 'Sparrow', size: 16, speed: 2.5, xpToNext: 15,  color: '#8B7355' },
+  { name: 'Crow',    size: 22, speed: 3.0, xpToNext: 40,  color: '#2F2F2F' },
+  { name: 'Hawk',    size: 28, speed: 3.5, xpToNext: 80,  color: '#C4A060' },
+  { name: 'Eagle',   size: 36, speed: 4.0, xpToNext: 150, color: '#4A3728' },
+  { name: 'Phoenix', size: 44, speed: 4.5, xpToNext: 300, color: '#FF6633' },
+  { name: 'Dragon',  size: 54, speed: 5.0, xpToNext: -1,  color: '#6B2FA0' },
 ];
 
 const FOOD_TYPES = [
-  { type: 'seed',   xp: 1, size: 5,  color: '#8B6914' },
-  { type: 'berry',  xp: 2, size: 7,  color: '#DC3494' },
-  { type: 'carrot', xp: 3, size: 9,  color: '#FF7722' },
-  { type: 'meat',   xp: 5, size: 11, color: '#CC2233' },
+  { type: 'insect', xp: 1, size: 5,  color: '#A8D870' },
+  { type: 'berry',  xp: 2, size: 7,  color: '#FF6B9D' },
+  { type: 'star',   xp: 3, size: 9,  color: '#FFD700' },
+  { type: 'orb',    xp: 5, size: 11, color: '#9B59B6' },
 ];
 
-const MAP_WIDTH = 4000;
+const MAP_WIDTH = 6000;
 const MAP_HEIGHT = 4000;
 const TICK_RATE = 20;
 const MAX_FOOD = 300;

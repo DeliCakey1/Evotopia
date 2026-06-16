@@ -12,17 +12,16 @@
   const leaderboardList = document.getElementById('leaderboardList');
 
   const EVOLUTION_TIERS = [
-    { name: 'Worm',     xpToNext: 15 },
-    { name: 'Mouse',    xpToNext: 40 },
-    { name: 'Rabbit',   xpToNext: 80 },
-    { name: 'Fox',      xpToNext: 150 },
-    { name: 'Wolf',     xpToNext: 250 },
-    { name: 'Bear',     xpToNext: 400 },
-    { name: 'Dragon',   xpToNext: -1 },
+    { name: 'Sparrow', xpToNext: 15 },
+    { name: 'Crow',    xpToNext: 40 },
+    { name: 'Hawk',    xpToNext: 80 },
+    { name: 'Eagle',   xpToNext: 150 },
+    { name: 'Phoenix', xpToNext: 300 },
+    { name: 'Dragon',  xpToNext: -1 },
   ];
 
   const network = new Network();
-  const input = new Input(canvas);
+  const input = new Input();
   const renderer = new Renderer(canvas);
 
   let myId = null;
@@ -159,12 +158,9 @@
       updateHUD();
       updateLeaderboard();
 
-      input.updateWorldCoords(renderer.camera);
-      const now = Date.now();
-      if (now - lastInputTime > 30 && input.shouldSend()) {
-        network.sendInput(input.mouseWorldX, input.mouseWorldY);
+      if (input.shouldSend()) {
+        network.sendInput(input.dx, input.dy);
         input.markSent();
-        lastInputTime = now;
       }
     }
     requestAnimationFrame(gameLoop);

@@ -15,30 +15,25 @@ class Player {
     this.color = EVOLUTION_TIERS[0].color;
     this.xp = 0;
     this.xpToNext = EVOLUTION_TIERS[0].xpToNext;
-    this.targetX = this.x;
-    this.targetY = this.y;
-    this.angle = 0;
+    this.dx = 0;
+    this.dy = 0;
+    this.facingRight = true;
     this.alive = true;
-    this.lastEvolveTier = -1;
   }
 
-  setTarget(x, y) {
-    this.targetX = x;
-    this.targetY = y;
+  setDirection(dx, dy) {
+    this.dx = Math.max(-1, Math.min(1, dx));
+    this.dy = Math.max(-1, Math.min(1, dy));
+    if (dx !== 0) this.facingRight = dx > 0;
   }
 
   update() {
     if (!this.alive) return;
 
-    const dx = this.targetX - this.x;
-    const dy = this.targetY - this.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-
-    if (dist > 0) {
-      this.angle = Math.atan2(dy, dx);
-      const move = Math.min(this.speed, dist);
-      this.x += (dx / dist) * move;
-      this.y += (dy / dist) * move;
+    if (this.dx !== 0 || this.dy !== 0) {
+      const len = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+      this.x += (this.dx / len) * this.speed;
+      this.y += (this.dy / len) * this.speed;
     }
 
     this.x = Math.max(this.size, Math.min(MAP_WIDTH - this.size, this.x));
@@ -72,7 +67,7 @@ class Player {
       tier: this.tier,
       tierName: this.tierName,
       color: this.color,
-      angle: this.angle,
+      facingRight: this.facingRight,
       xp: this.xp,
       xpToNext: this.xpToNext,
       alive: this.alive,

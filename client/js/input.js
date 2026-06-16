@@ -1,36 +1,43 @@
 class Input {
-  constructor(canvas) {
-    this.canvas = canvas;
-    this.mouseX = 0;
-    this.mouseY = 0;
-    this.mouseWorldX = 0;
-    this.mouseWorldY = 0;
-    this.lastSendX = 0;
-    this.lastSendY = 0;
+  constructor() {
+    this.keys = {};
+    this.dx = 0;
+    this.dy = 0;
+    this.lastDx = 0;
+    this.lastDy = 0;
 
-    canvas.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      this.mouseX = e.clientX - rect.left;
-      this.mouseY = e.clientY - rect.top;
+    document.addEventListener('keydown', (e) => {
+      this.keys[e.key] = true;
+      this.updateDirection();
     });
 
-    canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('keyup', (e) => {
+      this.keys[e.key] = false;
+      this.updateDirection();
+    });
+
+    window.addEventListener('blur', () => {
+      this.keys = {};
+      this.dx = 0;
+      this.dy = 0;
+    });
   }
 
-  updateWorldCoords(camera) {
-    if (!camera) return;
-    this.mouseWorldX = camera.screenToWorldX(this.mouseX);
-    this.mouseWorldY = camera.screenToWorldY(this.mouseY);
+  updateDirection() {
+    this.dx = 0;
+    this.dy = 0;
+    if (this.keys['w'] || this.keys['W'] || this.keys['ArrowUp']) this.dy = -1;
+    if (this.keys['s'] || this.keys['S'] || this.keys['ArrowDown']) this.dy = 1;
+    if (this.keys['a'] || this.keys['A'] || this.keys['ArrowLeft']) this.dx = -1;
+    if (this.keys['d'] || this.keys['D'] || this.keys['ArrowRight']) this.dx = 1;
   }
 
   shouldSend() {
-    const dx = this.mouseWorldX - this.lastSendX;
-    const dy = this.mouseWorldY - this.lastSendY;
-    return Math.sqrt(dx * dx + dy * dy) > 0.5;
+    return this.dx !== this.lastDx || this.dy !== this.lastDy;
   }
 
   markSent() {
-    this.lastSendX = this.mouseWorldX;
-    this.lastSendY = this.mouseWorldY;
+    this.lastDx = this.dx;
+    this.lastDy = this.dy;
   }
 }

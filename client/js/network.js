@@ -37,8 +37,8 @@ class Network {
     this.send({ type: 'join', name });
   }
 
-  sendInput(x, y) {
-    this.send({ type: 'input', x, y });
+  sendInput(dx, dy) {
+    this.send({ type: 'input', dx, dy });
   }
 
   on(event, callback) {

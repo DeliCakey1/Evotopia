@@ -66,7 +66,7 @@ wss.on('connection', (ws) => {
         console.log(player.name + ' joined (id=' + player.id + ', tier=' + player.tierName + ')');
       } else if (msg.type === 'input') {
         if (player && player.alive) {
-          player.setTarget(msg.x, msg.y);
+          player.setDirection(msg.dx, msg.dy);
         }
       }
     } catch (e) {
