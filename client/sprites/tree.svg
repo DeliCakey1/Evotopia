@@ -12,15 +12,7 @@
       <stop offset="75%" stop-color="#2A7A2A"/>
       <stop offset="100%" stop-color="#1A5A1A"/>
     </radialGradient>
-    <radialGradient id="berryGrad" cx="35%" cy="30%" r="60%">
-      <stop offset="0%" stop-color="#FF6B9D"/>
-      <stop offset="45%" stop-color="#E84070"/>
-      <stop offset="100%" stop-color="#BB1144"/>
-    </radialGradient>
-    <radialGradient id="berryGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#FF8DB5"/>
-      <stop offset="100%" stop-color="#FF4D85"/>
-    </radialGradient>
+
   </defs>
   <g transform="translate(60,160)">
     <!-- Roots -->
@@ -55,26 +47,6 @@
     <!-- Canopy shadow -->
     <ellipse cx="20" cy="-58" rx="20" ry="14" fill="#1A5A1A" opacity="0.2"/>
     <ellipse cx="-25" cy="-60" rx="15" ry="10" fill="#1A5A1A" opacity="0.15"/>
-    <!-- Cherries on tree -->
-    <circle cx="-18" cy="-72" r="4" fill="url(#berryGrad)"/>
-    <circle cx="-18.5" cy="-73.5" r="1.2" fill="white" opacity="0.35"/>
-    <circle cx="-14" cy="-65" r="3.5" fill="url(#berryGlow)"/>
-    <circle cx="-14.5" cy="-66.5" r="1" fill="white" opacity="0.3"/>
-    <circle cx="8" cy="-80" r="4" fill="url(#berryGrad)"/>
-    <circle cx="7.5" cy="-81.5" r="1.2" fill="white" opacity="0.35"/>
-    <circle cx="22" cy="-74" r="3" fill="url(#berryGlow)"/>
-    <circle cx="21.5" cy="-75.5" r="1" fill="white" opacity="0.3"/>
-    <circle cx="-5" cy="-90" r="3.5" fill="url(#berryGrad)"/>
-    <circle cx="-5.5" cy="-91.5" r="1" fill="white" opacity="0.35"/>
-    <circle cx="15" cy="-86" r="3" fill="url(#berryGlow)"/>
-    <circle cx="-24" cy="-60" r="3" fill="url(#berryGrad)"/>
-    <circle cx="-24.5" cy="-61.5" r="1" fill="white" opacity="0.3"/>
-    <circle cx="28" cy="-65" r="3.5" fill="url(#berryGrad)"/>
-    <circle cx="27.5" cy="-66.5" r="1" fill="white" opacity="0.35"/>
-    <circle cx="0" cy="-68" r="3" fill="url(#berryGlow)"/>
-    <circle cx="-10" cy="-78" r="2.5" fill="url(#berryGrad)"/>
-    <circle cx="12" cy="-95" r="2.5" fill="url(#berryGrad)"/>
-    <circle cx="-6" cy="-100" r="2" fill="url(#berryGlow)"/>
     <!-- Leaf details -->
     <ellipse cx="-30" cy="-50" rx="6" ry="3" fill="#3A9A3A" transform="rotate(-30,-30,-50)"/>
     <ellipse cx="32" cy="-48" rx="5" ry="3" fill="#3A9A3A" transform="rotate(25,32,-48)"/>
