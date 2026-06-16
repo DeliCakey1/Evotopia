@@ -8,10 +8,11 @@ let nextZoneId = 1;
 class WaterZone {
   constructor(id, x, groundY) {
     this.id = id;
+    this.depth = 55 + Math.floor(Math.random() * 35);
     this.x = x;
-    this.y = groundY - 50 - Math.random() * 40;
     this.w = 200 + Math.random() * 250;
-    this.h = 40 + Math.random() * 30;
+    this.y = groundY + this.depth * 0.35;
+    this.h = this.depth * 0.65;
     this.maxFish = 3 + Math.floor(Math.random() * 3);
     this.activeFish = 0;
     this.respawnTimers = [];

@@ -63,7 +63,7 @@ wss.on('connection', (ws) => {
           mapHeight: MAP_HEIGHT,
           trees: game.trees.map(t => ({ x: t.x, y: t.y, height: t.height, canopyWidth: t.canopyWidth })),
           bushes: game.bushes.map(b => ({ x: b.x, y: b.y })),
-          waterZones: game.waterZones.map(z => ({ x: z.x, y: z.y, w: z.w, h: z.h })),
+          waterZones: game.waterZones.map(z => ({ x: z.x, y: z.y, w: z.w, h: z.h, depth: z.depth })),
         }));
 
         console.log(player.name + ' joined (id=' + player.id + ', tier=' + player.tierName + ')');
