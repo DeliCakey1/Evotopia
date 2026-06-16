@@ -66,7 +66,8 @@ wss.on('connection', (ws) => {
         console.log(player.name + ' joined (id=' + player.id + ', tier=' + player.tierName + ')');
       } else if (msg.type === 'input') {
         if (player && player.alive) {
-          player.setDirection(msg.dx, msg.dy);
+          player.setDirection(msg.dx || 0, msg.dy || 0);
+          if (msg.flap) player.flap();
         }
       }
     } catch (e) {

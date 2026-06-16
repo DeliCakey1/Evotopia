@@ -1,4 +1,4 @@
-const { EVOLUTION_TIERS, MAP_WIDTH, MAP_HEIGHT, GRAVITY, THRUST, DIVE_SPEED, DRAG } = require('./config');
+const { EVOLUTION_TIERS, MAP_WIDTH, MAP_HEIGHT, GRAVITY, FLAP_VELOCITY, THRUST, DIVE_SPEED, DRAG } = require('./config');
 
 let nextId = 1;
 
@@ -11,7 +11,6 @@ class Player {
     this.tier = 0;
     this.size = EVOLUTION_TIERS[0].size;
     this.maxSpeed = EVOLUTION_TIERS[0].speed;
-    this.lift = EVOLUTION_TIERS[0].lift;
     this.tierName = EVOLUTION_TIERS[0].name;
     this.color = EVOLUTION_TIERS[0].color;
     this.xp = 0;
@@ -30,6 +29,10 @@ class Player {
     if (dx !== 0) this.facingRight = dx > 0;
   }
 
+  flap() {
+    this.vy = -FLAP_VELOCITY;
+  }
+
   update() {
     if (!this.alive) return;
 
@@ -37,9 +40,7 @@ class Player {
       this.vx += this.dx * THRUST;
     }
 
-    if (this.dy < 0) {
-      this.vy -= this.lift;
-    } else if (this.dy > 0) {
+    if (this.dy > 0) {
       this.vy += DIVE_SPEED;
     }
 
@@ -70,7 +71,6 @@ class Player {
       this.tierName = t.name;
       this.size = t.size;
       this.maxSpeed = t.speed;
-      this.lift = t.lift;
       this.color = t.color;
       this.xpToNext = t.xpToNext;
       evolved = true;
