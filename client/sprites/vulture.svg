@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="bodyGrad" cx="45%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#5A4A3A"/>
+      <stop offset="50%" stop-color="#4A3A2A"/>
+      <stop offset="100%" stop-color="#2A1A0E"/>
+    </radialGradient>
+    <linearGradient id="wingGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4A3A2A"/>
+      <stop offset="100%" stop-color="#2A1A0E"/>
+    </linearGradient>
+    <radialGradient id="headGrad" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#D8C8B0"/>
+      <stop offset="50%" stop-color="#C0A890"/>
+      <stop offset="100%" stop-color="#A08870"/>
+    </radialGradient>
+  </defs>
+  <g transform="translate(50,50)">
+    <!-- Tail -->
+    <polygon points="-26,12 -48,2 -44,22" fill="#2A1A0E"/>
+    <polygon points="-24,16 -42,26 -38,32" fill="#3A2A1A"/>
+    <!-- Body - bulky -->
+    <ellipse cx="-2" cy="4" rx="32" ry="20" fill="url(#bodyGrad)"/>
+    <!-- Wing - very broad -->
+    <path d="M-12,-6 Q-5,-52 42,-20 Q24,-2 -12,-2Z" fill="url(#wingGrad)"/>
+    <path d="M-10,-4 Q0,-38 35,-12" fill="none" stroke="#3A2A1A" stroke-width="1"/>
+    <path d="M-8,-2 Q5,-26 28,-8" fill="none" stroke="#3A2A1A" stroke-width="0.8"/>
+    <!-- Hunched shoulder -->
+    <ellipse cx="-5" cy="-6" rx="18" ry="10" fill="#3A2A1A" opacity="0.5"/>
+    <!-- Bare head/neck -->
+    <ellipse cx="34" cy="-6" rx="12" ry="14" fill="url(#headGrad)"/>
+    <!-- Neck wrinkles -->
+    <path d="M28,2 Q34,6 40,2" fill="none" stroke="#A08870" stroke-width="0.8" opacity="0.5"/>
+    <path d="M30,6 Q34,9 38,6" fill="none" stroke="#A08870" stroke-width="0.8" opacity="0.5"/>
+    <!-- Beak - thick hooked -->
+    <path d="M44,-8 Q56,-4 52,2 L44,3Z" fill="#C8A840"/>
+    <path d="M44,-3 Q52,-1 52,2" fill="none" stroke="#A88820" stroke-width="0.8"/>
+    <!-- Nostril -->
+    <circle cx="48" cy="-4" r="1.5" fill="#8A6820"/>
+    <!-- Eye -->
+    <circle cx="38" cy="-10" r="3.5" fill="#1a1a1a"/>
+    <circle cx="38.5" cy="-11" r="1.2" fill="white"/>
+    <!-- Brow ridge -->
+    <path d="M34,-14 Q38,-16 42,-13" fill="none" stroke="#A08870" stroke-width="1.5"/>
+  </g>
+</svg>

@@ -12,10 +12,13 @@
   const leaderboardList = document.getElementById('leaderboardList');
 
   const EVOLUTION_TIERS = [
-    { name: 'Sparrow', xpToNext: 20 },
-    { name: 'Crow',    xpToNext: 80 },
+    { name: 'Sparrow', xpToNext: 15 },
+    { name: 'Robin',   xpToNext: 40 },
+    { name: 'Crow',    xpToNext: 100 },
+    { name: 'Falcon',  xpToNext: 200 },
     { name: 'Hawk',    xpToNext: 400 },
-    { name: 'Eagle',   xpToNext: 900 },
+    { name: 'Vulture', xpToNext: 600 },
+    { name: 'Eagle',   xpToNext: 1000 },
     { name: 'Phoenix', xpToNext: 1600 },
     { name: 'Dragon',  xpToNext: -1 },
   ];

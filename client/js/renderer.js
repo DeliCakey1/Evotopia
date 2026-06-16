@@ -23,8 +23,11 @@ class SpriteLoader {
   loadAll(callback) {
     const sprites = {
       'sparrow': 'sprites/sparrow.svg',
+      'robin': 'sprites/robin.svg',
       'crow': 'sprites/crow.svg',
+      'falcon': 'sprites/falcon.svg',
       'hawk': 'sprites/hawk.svg',
+      'vulture': 'sprites/vulture.svg',
       'eagle': 'sprites/eagle.svg',
       'phoenix': 'sprites/phoenix.svg',
       'dragon': 'sprites/dragon.svg',

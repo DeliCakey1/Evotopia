@@ -1,10 +1,13 @@
 const EVOLUTION_TIERS = [
-  { name: 'Sparrow', size: 16, speed: 3.5, xpToNext: 20,   color: '#8B7355' },
-  { name: 'Crow',    size: 22, speed: 4.5, xpToNext: 80,   color: '#2F2F2F' },
-  { name: 'Hawk',    size: 28, speed: 5.5, xpToNext: 400,  color: '#C4A060' },
-  { name: 'Eagle',   size: 36, speed: 6.5, xpToNext: 900,  color: '#4A3728' },
-  { name: 'Phoenix', size: 44, speed: 7.5, xpToNext: 1600, color: '#FF6633' },
-  { name: 'Dragon',  size: 54, speed: 8.0, xpToNext: -1,   color: '#6B2FA0' },
+  { name: 'Sparrow', size: 16, speed: 3.5, xpToNext: 15,   color: '#8B7355' },
+  { name: 'Robin',   size: 19, speed: 4.0, xpToNext: 40,   color: '#C46040' },
+  { name: 'Crow',    size: 22, speed: 4.5, xpToNext: 100,  color: '#2F2F2F' },
+  { name: 'Falcon',  size: 26, speed: 5.0, xpToNext: 200,  color: '#6B7B8B' },
+  { name: 'Hawk',    size: 30, speed: 5.5, xpToNext: 400,  color: '#C4A060' },
+  { name: 'Vulture', size: 34, speed: 6.0, xpToNext: 600,  color: '#4A3A2A' },
+  { name: 'Eagle',   size: 38, speed: 6.5, xpToNext: 1000, color: '#4A3728' },
+  { name: 'Phoenix', size: 46, speed: 7.5, xpToNext: 1600, color: '#FF6633' },
+  { name: 'Dragon',  size: 56, speed: 8.5, xpToNext: -1,   color: '#6B2FA0' },
 ];
 
 const FOOD_TYPES = [
