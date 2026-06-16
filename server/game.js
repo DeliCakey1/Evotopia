@@ -1,4 +1,4 @@
-const { MAX_FOOD, INITIAL_FOOD, FOOD_RESPAWN_PER_TICK, EAT_RANGE, MAP_HEIGHT, MAP_WIDTH } = require('./config');
+const { MAX_FOOD, INITIAL_FOOD, FOOD_RESPAWN_PER_TICK, MAP_HEIGHT, MAP_WIDTH } = require('./config');
 const Food = require('./food');
 const Tree = require('./tree');
 
@@ -49,11 +49,9 @@ class Game {
     for (const player of this.players.values()) {
       if (!player.alive) continue;
       for (const [foodId, food] of this.foods) {
-        const dx = player.x - food.x;
-        const dy = player.y - food.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const eatRange = (player.size + food.size) * EAT_RANGE;
-        if (dist < eatRange) {
+        const pHalf = player.size * 1.25;
+        const fHalf = food.size;
+        if (Math.abs(player.x - food.x) < pHalf + fHalf && Math.abs(player.y - food.y) < pHalf + fHalf) {
           this.foods.delete(foodId);
           const newTier = player.addXp(food.xp);
           if (newTier >= 0) {

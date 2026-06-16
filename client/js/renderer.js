@@ -288,11 +288,11 @@ class Renderer {
     ctx.restore();
 
     if (isMe) {
+      const hw = s * 1.25;
+      const hh = s * 1.25;
       ctx.strokeStyle = 'rgba(255,255,255,0.5)';
       ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, s + 4, 0, Math.PI * 2);
-      ctx.stroke();
+      ctx.strokeRect(p.x - hw, p.y - hh, hw * 2, hh * 2);
     }
 
     ctx.fillStyle = '#fff';
