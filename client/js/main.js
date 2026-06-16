@@ -117,7 +117,7 @@
         xpText.textContent = myPlayer.xp + ' / ' + myPlayer.xpToNext + ' XP';
       } else {
         xpBar.style.width = '100%';
-        xpText.textContent = 'MAX LEVEL';
+        xpText.textContent = myPlayer.xp + ' XP';
         xpBar.style.background = 'linear-gradient(90deg, #FFD700, #FF6B35)';
       }
     }
