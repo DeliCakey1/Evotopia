@@ -1,10 +1,10 @@
 const EVOLUTION_TIERS = [
-  { name: 'Sparrow', size: 16, speed: 3.0, lift: 0.28, xpToNext: 15,  color: '#8B7355' },
-  { name: 'Crow',    size: 22, speed: 3.5, lift: 0.32, xpToNext: 40,  color: '#2F2F2F' },
-  { name: 'Hawk',    size: 28, speed: 4.0, lift: 0.36, xpToNext: 80,  color: '#C4A060' },
-  { name: 'Eagle',   size: 36, speed: 4.5, lift: 0.40, xpToNext: 150, color: '#4A3728' },
-  { name: 'Phoenix', size: 44, speed: 5.0, lift: 0.45, xpToNext: 300, color: '#FF6633' },
-  { name: 'Dragon',  size: 54, speed: 5.5, lift: 0.50, xpToNext: -1,  color: '#6B2FA0' },
+  { name: 'Sparrow', size: 16, speed: 5.0, lift: 0.9,  xpToNext: 15,  color: '#8B7355' },
+  { name: 'Crow',    size: 22, speed: 5.5, lift: 1.0,  xpToNext: 40,  color: '#2F2F2F' },
+  { name: 'Hawk',    size: 28, speed: 6.0, lift: 1.1,  xpToNext: 80,  color: '#C4A060' },
+  { name: 'Eagle',   size: 36, speed: 6.5, lift: 1.2,  xpToNext: 150, color: '#4A3728' },
+  { name: 'Phoenix', size: 44, speed: 7.5, lift: 1.35, xpToNext: 300, color: '#FF6633' },
+  { name: 'Dragon',  size: 54, speed: 8.5, lift: 1.5,  xpToNext: -1,  color: '#6B2FA0' },
 ];
 
 const FOOD_TYPES = [
@@ -22,10 +22,10 @@ const INITIAL_FOOD = 150;
 const FOOD_RESPAWN_PER_TICK = 0.2;
 const EAT_RANGE = 0.6;
 
-const GRAVITY = 0.12;
-const THRUST = 0.2;
-const DIVE_SPEED = 0.15;
-const DRAG = 0.92;
+const GRAVITY = 0.6;
+const THRUST = 0.3;
+const DIVE_SPEED = 0.4;
+const DRAG = 0.93;
 
 module.exports = {
   EVOLUTION_TIERS,

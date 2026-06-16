@@ -48,11 +48,8 @@ class Player {
     this.vx *= DRAG;
     this.vy *= DRAG;
 
-    const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-    if (speed > this.maxSpeed) {
-      this.vx = (this.vx / speed) * this.maxSpeed;
-      this.vy = (this.vy / speed) * this.maxSpeed;
-    }
+    this.vx = Math.max(-this.maxSpeed, Math.min(this.maxSpeed, this.vx));
+    this.vy = Math.max(-this.maxSpeed, Math.min(this.maxSpeed, this.vy));
 
     this.x += this.vx;
     this.y += this.vy;
