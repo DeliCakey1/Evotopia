@@ -58,9 +58,10 @@ class Game {
     for (const player of this.players.values()) {
       if (!player.alive) continue;
       for (const [foodId, food] of this.foods) {
-        const pHalf = player.size * 1.25;
+        const pHw = player.size * 1.2;
+        const pHh = player.size * 0.7;
         const fHalf = food.size;
-        if (Math.abs(player.x - food.x) < pHalf + fHalf && Math.abs(player.y - food.y) < pHalf + fHalf) {
+        if (Math.abs(player.x - food.x) < pHw + fHalf && Math.abs(player.y - food.y) < pHh + fHalf) {
           this.foods.delete(foodId);
           if (food.type === 'berry' && food.treeId != null) {
             const tree = this.trees.find(t => t.id === food.treeId);
