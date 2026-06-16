@@ -1,5 +1,20 @@
 const { EVOLUTION_TIERS, MAP_WIDTH, MAP_HEIGHT, GRAVITY, FLAP_VELOCITY, THRUST, DIVE_SPEED, DRAG } = require('./config');
 
+function getTerrainY(x, mapHeight, waterZones) {
+  const groundY = mapHeight - 200;
+  let y = groundY - Math.sin(x * 0.012) * 12 - Math.sin(x * 0.025) * 5 - Math.sin(x * 0.04) * 3;
+  for (const z of waterZones) {
+    const cx = z.x + z.w / 2;
+    const dist = Math.abs(x - cx);
+    const halfW = z.w / 2 + 25;
+    if (dist < halfW) {
+      const t = dist / halfW;
+      y += Math.max(0, (1 - t * t)) * z.depth;
+    }
+  }
+  return y;
+}
+
 let nextId = 1;
 
 class Player {
@@ -47,7 +62,7 @@ class Player {
     this.vy = -FLAP_VELOCITY;
   }
 
-  update() {
+  update(waterZones) {
     if (!this.alive) return;
 
     if (this.dx !== 0) {
@@ -72,6 +87,13 @@ class Player {
     if (this.x < this.size) { this.x = this.size; this.vx = 0; }
     if (this.x > MAP_WIDTH - this.size) { this.x = MAP_WIDTH - this.size; this.vx = 0; }
     if (this.y < this.size) { this.y = this.size; this.vy = 0; }
+
+    const terrainY = getTerrainY(this.x, MAP_HEIGHT, waterZones);
+    if (this.y + this.size > terrainY) {
+      this.y = terrainY - this.size;
+      this.vy = 0;
+    }
+
     if (this.y > MAP_HEIGHT - this.size) { this.y = MAP_HEIGHT - this.size; this.vy = 0; }
   }
 

@@ -254,28 +254,25 @@ class Renderer {
 
     const now = Date.now() * 0.001;
     for (const z of this.waterZones) {
-      const cx = z.x + z.w / 2;
-      const halfW = z.w / 2 + 25;
-      const surfaceY = this.getTerrainY(cx, mapHeight) - z.depth * 0.65;
+      const surfaceY = z.y;
+      const bottomY = z.y + z.h;
 
-      const grad = ctx.createLinearGradient(z.x, surfaceY, z.x, surfaceY + z.h);
+      const grad = ctx.createLinearGradient(z.x, surfaceY, z.x, bottomY);
       grad.addColorStop(0, 'rgba(60,130,200,' + (0.55 * waterAlpha) + ')');
       grad.addColorStop(0.5, 'rgba(40,100,180,' + (0.35 * waterAlpha) + ')');
       grad.addColorStop(1, 'rgba(30,80,150,' + (0.2 * waterAlpha) + ')');
       ctx.fillStyle = grad;
 
-      // Clip water to basin shape
       ctx.beginPath();
       ctx.moveTo(z.x, surfaceY);
       for (let wx = z.x; wx <= z.x + z.w; wx += 6) {
         const wy = this.getTerrainY(wx, mapHeight);
-        ctx.lineTo(wx, wy);
+        ctx.lineTo(wx, Math.min(wy, bottomY));
       }
       ctx.lineTo(z.x + z.w, surfaceY);
       ctx.closePath();
       ctx.fill();
 
-      // Ripple lines across water surface
       for (let i = 0; i < 4; i++) {
         const rx = z.x + 10 + ((i * 41 + 17 + Math.sin(now + i * 1.7) * 6) % Math.max(1, z.w - 20));
         const ry = surfaceY + 6 + i * (z.h - 12) / 3 + Math.sin(now * 1.3 + i * 0.9) * 3;
@@ -300,11 +297,8 @@ class Renderer {
   }
 
   getTerrainY(x, mapHeight) {
-    const groundY = mapHeight - 45;
-    let y = groundY - 3
-      - Math.sin(x * 0.012) * 12
-      - Math.sin(x * 0.025) * 5
-      - Math.sin(x * 0.04) * 3;
+    const groundY = mapHeight - 200;
+    let y = groundY - Math.sin(x * 0.012) * 12 - Math.sin(x * 0.025) * 5 - Math.sin(x * 0.04) * 3;
     for (const z of this.waterZones) {
       const cx = z.x + z.w / 2;
       const dist = Math.abs(x - cx);
@@ -318,14 +312,14 @@ class Renderer {
   }
 
   drawMapBorders(ctx, mapWidth, mapHeight) {
-    ctx.strokeStyle = 'rgba(255,100,100,0.08)';
+    const step = 6;
+    const groundY = mapHeight - 200;
+
+    ctx.strokeStyle = 'rgba(255,80,80,0.12)';
     ctx.lineWidth = 2;
     ctx.setLineDash([10, 10]);
     ctx.strokeRect(0, 0, mapWidth, mapHeight);
     ctx.setLineDash([]);
-
-    const step = 6;
-    const groundY = mapHeight - 45;
 
     // Build terrain points
     const pts = [];
@@ -347,10 +341,11 @@ class Renderer {
     ctx.closePath();
     ctx.fill();
 
-    // Grass blades
     for (const p of pts) {
-      ctx.fillStyle = 'rgba(40,160,60,' + (0.12 + Math.sin(p.x * 0.015) * 0.06 + 0.06) + ')';
-      ctx.fillRect(p.x, p.y, step, groundY - p.y);
+      if (p.y <= groundY) {
+        ctx.fillStyle = 'rgba(40,160,60,' + (0.12 + Math.sin(p.x * 0.015) * 0.06 + 0.06) + ')';
+        ctx.fillRect(p.x, p.y, step, groundY - p.y);
+      }
     }
 
     // Trees on terrain

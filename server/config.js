@@ -23,7 +23,7 @@ const FOOD_TYPES = [
 ];
 
 const MAP_WIDTH = 6000;
-const MAP_HEIGHT = 2800;
+const MAP_HEIGHT = 3100;
 const TICK_RATE = 16;
 const MAX_FOOD = 400;
 const INITIAL_FOOD = 200;

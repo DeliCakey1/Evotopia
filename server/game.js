@@ -5,14 +5,29 @@ const Bush = require('./bush');
 
 let nextZoneId = 1;
 
+function getTerrainY(x, mapHeight, waterZones) {
+  const groundY = mapHeight - 200;
+  let y = groundY - Math.sin(x * 0.012) * 12 - Math.sin(x * 0.025) * 5 - Math.sin(x * 0.04) * 3;
+  for (const z of waterZones) {
+    const cx = z.x + z.w / 2;
+    const dist = Math.abs(x - cx);
+    const halfW = z.w / 2 + 25;
+    if (dist < halfW) {
+      const t = dist / halfW;
+      y += Math.max(0, (1 - t * t)) * z.depth;
+    }
+  }
+  return y;
+}
+
 class WaterZone {
   constructor(id, x, groundY) {
     this.id = id;
     this.depth = 55 + Math.floor(Math.random() * 35);
     this.x = x;
-    this.w = 200 + Math.random() * 250;
-    this.y = groundY + this.depth * 0.35;
-    this.h = this.depth * 0.65;
+    this.w = 220 + Math.random() * 230;
+    this.y = groundY + this.depth * 0.55;
+    this.h = this.depth * 0.45;
     this.maxFish = 3 + Math.floor(Math.random() * 3);
     this.activeFish = 0;
     this.respawnTimers = [];
@@ -110,7 +125,7 @@ class Game {
 
   initTrees() {
     const trees = [];
-    const groundY = MAP_HEIGHT - 45;
+    const groundY = MAP_HEIGHT - 200;
     const count = 22;
     const spacing = MAP_WIDTH / count;
     for (let i = 0; i < count; i++) {
@@ -122,7 +137,7 @@ class Game {
 
   initBushes() {
     const bushes = [];
-    const groundY = MAP_HEIGHT - 45;
+    const groundY = MAP_HEIGHT - 200;
     const spacing = MAP_WIDTH / BUSH_COUNT;
     for (let i = 0; i < BUSH_COUNT; i++) {
       const x = spacing * i + spacing * 0.2 + Math.random() * spacing * 0.5;
@@ -133,7 +148,7 @@ class Game {
 
   initWaterZones() {
     const zones = [];
-    const groundY = MAP_HEIGHT - 45;
+    const groundY = MAP_HEIGHT - 200;
     const spacing = MAP_WIDTH / WATER_ZONE_COUNT;
     for (let i = 0; i < WATER_ZONE_COUNT; i++) {
       const x = spacing * i + spacing * 0.2 + Math.random() * spacing * 0.4;
@@ -144,7 +159,7 @@ class Game {
 
   initBurrows() {
     const burrows = [];
-    const groundY = MAP_HEIGHT - 45;
+    const groundY = MAP_HEIGHT - 200;
     const spacing = MAP_WIDTH / BURROW_COUNT;
     for (let i = 0; i < BURROW_COUNT; i++) {
       const x = spacing * i + spacing * 0.2 + Math.random() * spacing * 0.5;
@@ -226,7 +241,7 @@ class Game {
     this.evolveEvents = [];
 
     for (const player of this.players.values()) {
-      player.update();
+      player.update(this.waterZones);
     }
 
     // Eating with diet check
