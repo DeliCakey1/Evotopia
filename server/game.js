@@ -25,9 +25,18 @@ class Game {
   }
 
   initFood() {
+    for (const tree of this.trees) {
+      const initial = 2 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < initial; i++) {
+        const pos = tree.getBerryPosition();
+        const food = Food.createCherry(tree, pos.x, pos.y);
+        this.foods.set(food.id, food);
+        tree.addCherry();
+      }
+    }
     for (let i = 0; i < INITIAL_FOOD; i++) {
       const food = Food.random(this.trees);
-      this.foods.set(food.id, food);
+      if (food) this.foods.set(food.id, food);
     }
   }
 
@@ -53,6 +62,10 @@ class Game {
         const fHalf = food.size;
         if (Math.abs(player.x - food.x) < pHalf + fHalf && Math.abs(player.y - food.y) < pHalf + fHalf) {
           this.foods.delete(foodId);
+          if (food.type === 'berry' && food.treeId != null) {
+            const tree = this.trees.find(t => t.id === food.treeId);
+            if (tree) tree.cherryEaten();
+          }
           const newTier = player.addXp(food.xp);
           if (newTier >= 0) {
             this.evolveEvents.push({ playerId: player.id, tier: newTier, tierName: player.tierName });
@@ -61,11 +74,21 @@ class Game {
       }
     }
 
+    for (const tree of this.trees) {
+      const ready = tree.update();
+      for (let i = 0; i < ready; i++) {
+        const pos = tree.getBerryPosition();
+        const food = Food.createCherry(tree, pos.x, pos.y);
+        this.foods.set(food.id, food);
+        tree.addCherry();
+      }
+    }
+
     this.foodAccumulator += FOOD_RESPAWN_PER_TICK;
     while (this.foodAccumulator >= 1 && this.foods.size < MAX_FOOD) {
       this.foodAccumulator--;
       const food = Food.random(this.trees);
-      this.foods.set(food.id, food);
+      if (food) this.foods.set(food.id, food);
     }
   }
 
