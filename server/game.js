@@ -15,7 +15,7 @@ class Game {
   initTrees() {
     const trees = [];
     const groundY = MAP_HEIGHT - 45;
-    const count = 28;
+    const count = 22;
     const spacing = MAP_WIDTH / count;
     for (let i = 0; i < count; i++) {
       const x = spacing * i + spacing * 0.2 + Math.random() * spacing * 0.5;

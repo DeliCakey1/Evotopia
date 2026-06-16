@@ -9,7 +9,7 @@ const EVOLUTION_TIERS = [
 
 const FOOD_TYPES = [
   { type: 'insect', xp: 1, size: 5,  color: '#A8D870' },
-  { type: 'berry',  xp: 2, size: 7,  color: '#FF6B9D' },
+  { type: 'berry',  xp: 2, size: 10, color: '#FF6B9D' },
   { type: 'star',   xp: 3, size: 9,  color: '#FFD700' },
   { type: 'orb',    xp: 5, size: 11, color: '#9B59B6' },
 ];

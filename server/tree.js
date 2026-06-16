@@ -3,8 +3,8 @@ class Tree {
     this.id = id;
     this.x = x;
     this.y = groundY;
-    this.height = 160 + Math.random() * 100;
-    this.canopyWidth = 90 + Math.random() * 50;
+    this.height = 200 + Math.random() * 140;
+    this.canopyWidth = 130 + Math.random() * 70;
     this.maxCherries = 5 + Math.floor(Math.random() * 6);
     this.activeCherries = 0;
     this.respawnTimers = [];
