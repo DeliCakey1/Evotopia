@@ -1,4 +1,4 @@
-const { EVOLUTION_TIERS, MAP_WIDTH, MAP_HEIGHT } = require('./config');
+const { EVOLUTION_TIERS, MAP_WIDTH, MAP_HEIGHT, GRAVITY, THRUST, DIVE_SPEED, DRAG } = require('./config');
 
 let nextId = 1;
 
@@ -7,16 +7,19 @@ class Player {
     this.id = nextId++;
     this.name = name || 'Player ' + this.id;
     this.x = Math.random() * (MAP_WIDTH - 200) + 100;
-    this.y = Math.random() * (MAP_HEIGHT - 200) + 100;
+    this.y = Math.random() * (MAP_HEIGHT - 400) + 200;
     this.tier = 0;
     this.size = EVOLUTION_TIERS[0].size;
-    this.speed = EVOLUTION_TIERS[0].speed;
+    this.maxSpeed = EVOLUTION_TIERS[0].speed;
+    this.lift = EVOLUTION_TIERS[0].lift;
     this.tierName = EVOLUTION_TIERS[0].name;
     this.color = EVOLUTION_TIERS[0].color;
     this.xp = 0;
     this.xpToNext = EVOLUTION_TIERS[0].xpToNext;
     this.dx = 0;
     this.dy = 0;
+    this.vx = 0;
+    this.vy = 0;
     this.facingRight = true;
     this.alive = true;
   }
@@ -30,14 +33,34 @@ class Player {
   update() {
     if (!this.alive) return;
 
-    if (this.dx !== 0 || this.dy !== 0) {
-      const len = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
-      this.x += (this.dx / len) * this.speed;
-      this.y += (this.dy / len) * this.speed;
+    if (this.dx !== 0) {
+      this.vx += this.dx * THRUST;
     }
 
-    this.x = Math.max(this.size, Math.min(MAP_WIDTH - this.size, this.x));
-    this.y = Math.max(this.size, Math.min(MAP_HEIGHT - this.size, this.y));
+    if (this.dy < 0) {
+      this.vy -= this.lift;
+    } else if (this.dy > 0) {
+      this.vy += DIVE_SPEED;
+    }
+
+    this.vy += GRAVITY;
+
+    this.vx *= DRAG;
+    this.vy *= DRAG;
+
+    const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+    if (speed > this.maxSpeed) {
+      this.vx = (this.vx / speed) * this.maxSpeed;
+      this.vy = (this.vy / speed) * this.maxSpeed;
+    }
+
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.x < this.size) { this.x = this.size; this.vx = 0; }
+    if (this.x > MAP_WIDTH - this.size) { this.x = MAP_WIDTH - this.size; this.vx = 0; }
+    if (this.y < this.size) { this.y = this.size; this.vy = 0; }
+    if (this.y > MAP_HEIGHT - this.size) { this.y = MAP_HEIGHT - this.size; this.vy = 0; }
   }
 
   addXp(amount) {
@@ -49,7 +72,8 @@ class Player {
       const t = EVOLUTION_TIERS[this.tier];
       this.tierName = t.name;
       this.size = t.size;
-      this.speed = t.speed;
+      this.maxSpeed = t.speed;
+      this.lift = t.lift;
       this.color = t.color;
       this.xpToNext = t.xpToNext;
       evolved = true;
