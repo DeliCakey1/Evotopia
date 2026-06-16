@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="body" cx="45%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#5A3E28"/>
+      <stop offset="50%" stop-color="#3E2A18"/>
+      <stop offset="100%" stop-color="#2A1A0E"/>
+    </radialGradient>
+    <linearGradient id="wingGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4A3420"/>
+      <stop offset="100%" stop-color="#2A1A0E"/>
+    </linearGradient>
+    <radialGradient id="headGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="80%" stop-color="#F0F0F0"/>
+      <stop offset="100%" stop-color="#D0D0D0"/>
+    </radialGradient>
+    <linearGradient id="beakGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0C040"/>
+      <stop offset="100%" stop-color="#C89220"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(50,50)">
+    <!-- Tail -->
+    <polygon points="-28,10 -52,-5 -50,22" fill="#2A1A0E"/>
+    <polygon points="-26,15 -48,25 -44,32" fill="#3E2A18"/>
+    <!-- Body - large -->
+    <ellipse cx="-2" cy="3" rx="35" ry="22" fill="url(#body)"/>
+    <!-- Wing - very broad -->
+    <path d="M-10,-8 Q0,-55 45,-20 Q22,-2 -10,-2Z" fill="url(#wingGrad)"/>
+    <path d="M-8,-6 Q5,-40 38,-12" fill="none" stroke="#3E2A18" stroke-width="1.2"/>
+    <path d="M-6,-4 Q8,-28 30,-8" fill="none" stroke="#3E2A18" stroke-width="1"/>
+    <path d="M-4,-2 Q10,-18 22,-5" fill="none" stroke="#3E2A18" stroke-width="0.8"/>
+    <!-- White head -->
+    <circle cx="35" cy="-10" r="17" fill="url(#headGrad)"/>
+    <!-- Beak - large hooked -->
+    <path d="M48,-14 Q62,-8 56,-2 L48,-1Z" fill="url(#beakGrad)"/>
+    <path d="M48,-8 Q58,-5 56,-2" fill="none" stroke="#B87A18" stroke-width="0.8"/>
+    <!-- Eye -->
+    <circle cx="40" cy="-14" r="4.5" fill="#1a1a1a"/>
+    <circle cx="41" cy="-15" r="2" fill="white"/>
+    <!-- Brow -->
+    <path d="M35,-19 Q40,-22 45,-18" fill="none" stroke="#2A1A0E" stroke-width="2"/>
+    <!-- Feather detail -->
+    <path d="M-15,5 Q-5,-15 20,-5" fill="none" stroke="#4A3420" stroke-width="0.8" opacity="0.5"/>
+  </g>
+</svg>

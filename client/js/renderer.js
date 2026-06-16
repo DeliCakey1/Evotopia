@@ -15,6 +15,51 @@ class Camera {
   }
 }
 
+class SpriteLoader {
+  constructor() {
+    this.images = {};
+  }
+
+  loadAll(callback) {
+    const sprites = {
+      'sparrow': 'sprites/sparrow.svg',
+      'crow': 'sprites/crow.svg',
+      'hawk': 'sprites/hawk.svg',
+      'eagle': 'sprites/eagle.svg',
+      'phoenix': 'sprites/phoenix.svg',
+      'dragon': 'sprites/dragon.svg',
+      'insect': 'sprites/insect.svg',
+      'berry': 'sprites/berry.svg',
+      'star': 'sprites/star.svg',
+      'orb': 'sprites/orb.svg',
+      'cloud': 'sprites/cloud.svg',
+      'tree': 'sprites/tree.svg',
+    };
+
+    const names = Object.keys(sprites);
+    let loaded = 0;
+
+    for (const name of names) {
+      const img = new Image();
+      img.onload = () => {
+        loaded++;
+        if (loaded >= names.length) callback();
+      };
+      img.onerror = () => {
+        console.warn('Failed to load sprite:', name);
+        loaded++;
+        if (loaded >= names.length) callback();
+      };
+      img.src = sprites[name];
+      this.images[name] = img;
+    }
+  }
+
+  get(name) {
+    return this.images[name] || null;
+  }
+}
+
 class Renderer {
   constructor(canvas) {
     this.canvas = canvas;
@@ -25,29 +70,34 @@ class Renderer {
     this.smoothScale = 1.5;
     this.clouds = [];
     this.groundTrees = [];
+    this.sprites = new SpriteLoader();
+    this.spritesReady = false;
+
+    this.sprites.loadAll(() => {
+      this.spritesReady = true;
+    });
+
     this.initClouds();
     this.initGround();
   }
 
   initClouds() {
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 25; i++) {
       this.clouds.push({
         x: Math.random() * 6500 - 250,
         y: 100 + Math.random() * 1800,
-        w: 70 + Math.random() * 140,
-        h: 18 + Math.random() * 30,
-        speed: 0.08 + Math.random() * 0.18,
-        opacity: 0.2 + Math.random() * 0.3,
+        speed: 0.06 + Math.random() * 0.15,
+        opacity: 0.15 + Math.random() * 0.25,
+        scale: 0.5 + Math.random() * 0.8,
       });
     }
   }
 
   initGround() {
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 60; i++) {
       this.groundTrees.push({
         x: Math.random() * 6500 - 250,
-        h: 18 + Math.random() * 25,
-        w: 10 + Math.random() * 8,
+        scale: 0.4 + Math.random() * 0.6,
       });
     }
   }
@@ -142,27 +192,20 @@ class Renderer {
     const fade = Math.max(0, Math.min(1, (mapHeight - camY - 100) / 1400));
     if (fade < 0.01) return;
 
+    const cloudImg = this.sprites.get('cloud');
+    if (!cloudImg) return;
+
     for (const c of this.clouds) {
       c.x += c.speed;
       if (c.x > 6500) c.x = -250;
 
       const a = c.opacity * fade;
       if (a < 0.01) continue;
-      ctx.globalAlpha = a;
-      ctx.fillStyle = '#ffffff';
 
-      ctx.beginPath();
-      ctx.ellipse(c.x, c.y, c.w * 0.4, c.h * 0.5, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(c.x - c.w * 0.3, c.y + c.h * 0.1, c.w * 0.35, c.h * 0.4, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(c.x + c.w * 0.25, c.y + c.h * 0.05, c.w * 0.3, c.h * 0.35, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(c.x - c.w * 0.1, c.y - c.h * 0.15, c.w * 0.25, c.h * 0.35, 0, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.globalAlpha = a;
+      const cw = 100 * c.scale;
+      const ch = 60 * c.scale;
+      ctx.drawImage(cloudImg, c.x - cw / 2, c.y - ch / 2, cw, ch);
     }
     ctx.globalAlpha = 1;
   }
@@ -189,90 +232,63 @@ class Renderer {
       ctx.fillRect(i, h, 6, groundY - h);
     }
 
-    for (const t of this.groundTrees) {
-      const baseY = groundY - 3 - Math.sin(t.x * 0.012) * 12 - Math.sin(t.x * 0.025) * 5 - Math.sin(t.x * 0.04) * 3;
-      ctx.fillStyle = 'rgba(30,70,20,0.25)';
-      ctx.fillRect(t.x - 2, baseY - t.h * 0.5, 4, t.h * 0.5);
-      ctx.beginPath();
-      ctx.moveTo(t.x, baseY - t.h * 0.5);
-      ctx.lineTo(t.x - t.w * 0.5, baseY - t.h * 0.15);
-      ctx.lineTo(t.x + t.w * 0.5, baseY - t.h * 0.15);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(t.x, baseY - t.h * 0.7);
-      ctx.lineTo(t.x - t.w * 0.35, baseY - t.h * 0.3);
-      ctx.lineTo(t.x + t.w * 0.35, baseY - t.h * 0.3);
-      ctx.fill();
+    const treeImg = this.sprites.get('tree');
+    if (treeImg) {
+      for (const t of this.groundTrees) {
+        const baseY = groundY - 3 - Math.sin(t.x * 0.012) * 12 - Math.sin(t.x * 0.025) * 5 - Math.sin(t.x * 0.04) * 3;
+        const tw = 30 * t.scale;
+        const th = 60 * t.scale;
+        ctx.drawImage(treeImg, t.x - tw / 2, baseY - th, tw, th);
+      }
     }
   }
 
   drawFood(ctx, food) {
-    ctx.save();
-    ctx.translate(food.x, food.y);
-    const s = food.size;
-    ctx.shadowColor = food.color;
-    ctx.shadowBlur = 6;
-
-    if (food.type === 'insect') {
-      ctx.fillStyle = food.color;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, s, s * 0.6, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      ctx.beginPath();
-      ctx.ellipse(s * 0.6, -s * 0.2, s * 0.5, s * 0.15, 0.3, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(-s * 0.6, -s * 0.2, s * 0.5, s * 0.15, -0.3, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (food.type === 'star') {
-      ctx.fillStyle = food.color;
-      this.drawStar(ctx, 0, 0, s, s * 0.4, 5);
-    } else if (food.type === 'orb') {
-      ctx.fillStyle = food.color;
-      ctx.beginPath();
-      ctx.arc(0, 0, s, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      ctx.beginPath();
-      ctx.arc(-s * 0.2, -s * 0.2, s * 0.4, 0, Math.PI * 2);
-      ctx.fill();
+    const s = food.size * 2;
+    const img = this.sprites.get(food.type);
+    if (img) {
+      ctx.save();
+      ctx.translate(food.x, food.y);
+      ctx.shadowColor = food.color;
+      ctx.shadowBlur = 8;
+      ctx.drawImage(img, -s / 2, -s / 2, s, s);
+      ctx.shadowBlur = 0;
+      ctx.restore();
     } else {
+      ctx.save();
+      ctx.translate(food.x, food.y);
+      ctx.shadowColor = food.color;
+      ctx.shadowBlur = 6;
       ctx.fillStyle = food.color;
       ctx.beginPath();
-      ctx.arc(0, 0, s, 0, Math.PI * 2);
+      ctx.arc(0, 0, food.size, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.25)';
-      ctx.beginPath();
-      ctx.arc(-s * 0.2, -s * 0.2, s * 0.35, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.restore();
     }
-
-    ctx.shadowBlur = 0;
-    ctx.restore();
-  }
-
-  drawStar(ctx, cx, cy, outerR, innerR, points) {
-    ctx.beginPath();
-    for (let i = 0; i < points * 2; i++) {
-      const r = i % 2 === 0 ? outerR : innerR;
-      const a = (i * Math.PI) / points - Math.PI / 2;
-      const x = cx + Math.cos(a) * r;
-      const y = cy + Math.sin(a) * r;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    ctx.fill();
   }
 
   drawPlayer(ctx, p, isMe) {
+    const img = this.sprites.get(p.tierName.toLowerCase());
+    const s = p.size;
+
     ctx.save();
     ctx.translate(p.x, p.y);
     if (!p.facingRight) ctx.scale(-1, 1);
-    ctx.shadowColor = 'rgba(0,0,0,0.2)';
-    ctx.shadowBlur = 8;
-    this.drawFlyingCreature(ctx, p, p.size);
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 10;
+
+    if (img) {
+      const w = s * 2.5;
+      const h = s * 2.5;
+      ctx.drawImage(img, -w / 2, -h / 2, w, h);
+    } else {
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(0, 0, s, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     ctx.shadowBlur = 0;
     ctx.restore();
 
@@ -280,146 +296,17 @@ class Renderer {
       ctx.strokeStyle = 'rgba(255,255,255,0.5)';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size + 4, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, s + 4, 0, Math.PI * 2);
       ctx.stroke();
     }
 
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold ' + Math.max(10, p.size * 0.7) + 'px sans-serif';
+    ctx.font = 'bold ' + Math.max(10, s * 0.7) + 'px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
     ctx.shadowColor = 'rgba(0,0,0,0.8)';
     ctx.shadowBlur = 3;
-    ctx.fillText(p.name, p.x, p.y - p.size - 6);
+    ctx.fillText(p.name, p.x, p.y - s - 6);
     ctx.shadowBlur = 0;
-  }
-
-  drawFlyingCreature(ctx, p, s) {
-    const tierName = p.tierName;
-    const color = p.color;
-    switch (tierName) {
-      case 'Sparrow': this.drawSparrow(ctx, s, color); break;
-      case 'Crow': this.drawCrow(ctx, s, color); break;
-      case 'Hawk': this.drawHawk(ctx, s, color); break;
-      case 'Eagle': this.drawEagle(ctx, s, color); break;
-      case 'Phoenix': this.drawPhoenix(ctx, s, color); break;
-      case 'Dragon': this.drawDragon(ctx, s, color); break;
-      default: this.drawSparrow(ctx, s, color); break;
-    }
-  }
-
-  drawSparrow(ctx, s, color) {
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.ellipse(0, 0, s * 0.5, s * 0.35, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.moveTo(s * 0.4, -s * 0.1); ctx.lineTo(s * 0.8, -s * 0.15); ctx.lineTo(s * 0.4, -s * 0.5); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(s * 0.4, s * 0.1); ctx.lineTo(s * 0.8, s * 0.15); ctx.lineTo(s * 0.4, s * 0.5); ctx.fill();
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.moveTo(-s * 0.3, 0); ctx.lineTo(-s * 0.8, s * 0.15); ctx.lineTo(-s * 0.7, -s * 0.1); ctx.fill();
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath(); ctx.moveTo(s * 0.3, -s * 0.05); ctx.lineTo(s * 0.6, -s * 0.08); ctx.lineTo(s * 0.3, s * 0.05); ctx.fill();
-  }
-
-  drawCrow(ctx, s, color) {
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.ellipse(0, 0, s * 0.5, s * 0.35, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.moveTo(s * 0.35, -s * 0.25); ctx.lineTo(s * 0.3, -s * 0.7); ctx.lineTo(s * 0.55, -s * 0.3); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(s * 0.35, s * 0.25); ctx.lineTo(s * 0.3, s * 0.7); ctx.lineTo(s * 0.55, s * 0.3); ctx.fill();
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.moveTo(-s * 0.35, 0); ctx.lineTo(-s * 0.75, s * 0.08); ctx.lineTo(-s * 0.7, -s * 0.15); ctx.fill();
-    ctx.fillStyle = '#333';
-    ctx.beginPath(); ctx.moveTo(s * 0.35, -s * 0.08); ctx.lineTo(s * 0.65, -s * 0.1); ctx.lineTo(s * 0.3, s * 0.05); ctx.fill();
-    ctx.fillStyle = '#111';
-    ctx.beginPath(); ctx.arc(s * 0.2, -s * 0.15, s * 0.08, 0, Math.PI * 2); ctx.fill();
-  }
-
-  drawHawk(ctx, s, color) {
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.ellipse(0, 0, s * 0.5, s * 0.35, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = this.darken(color, 0.8);
-    ctx.beginPath(); ctx.moveTo(s * 0.15, -s * 0.2); ctx.lineTo(-s * 0.1, -s * 0.75); ctx.lineTo(s * 0.4, -s * 0.35); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(s * 0.15, s * 0.2); ctx.lineTo(-s * 0.1, s * 0.75); ctx.lineTo(s * 0.4, s * 0.35); ctx.fill();
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.moveTo(-s * 0.35, 0); ctx.lineTo(-s * 0.75, s * 0.1); ctx.lineTo(-s * 0.65, -s * 0.15); ctx.fill();
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath(); ctx.moveTo(s * 0.35, -s * 0.05); ctx.lineTo(s * 0.7, -s * 0.08); ctx.lineTo(s * 0.35, s * 0.05); ctx.fill();
-    ctx.fillStyle = '#222';
-    ctx.beginPath(); ctx.arc(s * 0.2, -s * 0.12, s * 0.07, 0, Math.PI * 2); ctx.fill();
-  }
-
-  drawEagle(ctx, s, color) {
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.ellipse(0, 0, s * 0.5, s * 0.38, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = this.darken(color, 0.8);
-    ctx.beginPath(); ctx.moveTo(s * 0.1, -s * 0.2); ctx.lineTo(-s * 0.2, -s * 0.85); ctx.lineTo(s * 0.45, -s * 0.35); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(s * 0.1, s * 0.2); ctx.lineTo(-s * 0.2, s * 0.85); ctx.lineTo(s * 0.45, s * 0.35); ctx.fill();
-    ctx.fillStyle = '#f5f5f5';
-    ctx.beginPath(); ctx.moveTo(s * 0.2, -s * 0.05); ctx.lineTo(s * 0.7, -s * 0.1); ctx.lineTo(s * 0.4, 0); ctx.fill();
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.moveTo(-s * 0.4, 0); ctx.lineTo(-s * 0.8, s * 0.12); ctx.lineTo(-s * 0.7, -s * 0.12); ctx.fill();
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath(); ctx.moveTo(s * 0.35, -s * 0.06); ctx.lineTo(s * 0.72, -s * 0.1); ctx.lineTo(s * 0.35, s * 0.06); ctx.fill();
-    ctx.fillStyle = '#222';
-    ctx.beginPath(); ctx.arc(s * 0.18, -s * 0.14, s * 0.08, 0, Math.PI * 2); ctx.fill();
-  }
-
-  drawPhoenix(ctx, s, color) {
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.ellipse(0, 0, s * 0.5, s * 0.38, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#FF9944';
-    ctx.beginPath(); ctx.moveTo(s * 0.2, -s * 0.25); ctx.lineTo(-s * 0.1, -s * 0.85); ctx.lineTo(s * 0.45, -s * 0.3); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(s * 0.2, s * 0.25); ctx.lineTo(-s * 0.1, s * 0.85); ctx.lineTo(s * 0.45, s * 0.3); ctx.fill();
-    for (let i = 0; i < 3; i++) {
-      const ty = -s * 0.35 - i * s * 0.15;
-      ctx.fillStyle = i % 2 === 0 ? '#FF6633' : '#FFD700';
-      ctx.beginPath(); ctx.moveTo(s * 0.1, ty); ctx.lineTo(-s * 0.45, ty - s * 0.1); ctx.lineTo(-s * 0.35, ty + s * 0.05); ctx.fill();
-    }
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath(); ctx.moveTo(-s * 0.4, 0); ctx.lineTo(-s * 0.9, s * 0.15); ctx.lineTo(-s * 0.75, -s * 0.05); ctx.lineTo(-s * 0.9, -s * 0.2); ctx.fill();
-    for (let i = 0; i < 4; i++) {
-      const ty = s * 0.3 + i * s * 0.25;
-      ctx.fillStyle = i % 2 === 0 ? '#FF6633' : '#FFD700';
-      ctx.beginPath(); ctx.moveTo(-s * 0.2, ty); ctx.quadraticCurveTo(-s * 0.6, ty + s * 0.15, -s * 0.3, ty + s * 0.3); ctx.quadraticCurveTo(-s * 0.1, ty + s * 0.1, -s * 0.2, ty); ctx.fill();
-    }
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath(); ctx.moveTo(s * 0.4, -s * 0.1); ctx.lineTo(s * 0.8, -s * 0.05); ctx.lineTo(s * 0.4, s * 0.1); ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(s * 0.2, -s * 0.15, s * 0.06, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath(); ctx.moveTo(s * 0.05, -s * 0.45); ctx.lineTo(s * 0.15, -s * 0.65); ctx.lineTo(s * 0.25, -s * 0.45); ctx.fill();
-  }
-
-  drawDragon(ctx, s, color) {
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.ellipse(0, 0, s * 0.5, s * 0.38, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = this.darken(color, 0.75);
-    ctx.beginPath(); ctx.moveTo(-s * 0.1, -s * 0.15); ctx.lineTo(-s * 0.4, -s * 0.85); ctx.lineTo(s * 0.25, -s * 0.35); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(-s * 0.1, s * 0.15); ctx.lineTo(-s * 0.4, s * 0.85); ctx.lineTo(s * 0.25, s * 0.35); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = color;
-    ctx.beginPath(); ctx.moveTo(-s * 0.45, 0); ctx.lineTo(-s * 0.9, s * 0.15); ctx.lineTo(-s * 0.8, -s * 0.05); ctx.lineTo(-s * 0.9, -s * 0.2); ctx.fill();
-    for (let i = 0; i < 3; i++) {
-      const ty = s * 0.3 + i * s * 0.2;
-      ctx.fillStyle = this.darken(color, 0.7);
-      ctx.beginPath(); ctx.moveTo(-s * 0.15, ty); ctx.lineTo(-s * 0.5, ty - s * 0.05); ctx.lineTo(-s * 0.4, ty + s * 0.15); ctx.lineTo(-s * 0.15, ty + s * 0.05); ctx.fill();
-    }
-    ctx.fillStyle = '#66FF66';
-    ctx.beginPath(); ctx.arc(s * 0.15, -s * 0.15, s * 0.1, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#222';
-    ctx.beginPath(); ctx.arc(s * 0.15, -s * 0.15, s * 0.04, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#66FF66';
-    ctx.beginPath(); ctx.arc(s * 0.1, -s * 0.25, s * 0.03, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = this.darken(color, 0.6);
-    ctx.beginPath(); ctx.moveTo(-s * 0.1, -s * 0.45); ctx.lineTo(s * 0.05, -s * 0.6); ctx.lineTo(s * 0.15, -s * 0.4); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(s * 0.0, -s * 0.5); ctx.lineTo(s * 0.05, -s * 0.7); ctx.lineTo(s * 0.2, -s * 0.45); ctx.fill();
-    ctx.fillStyle = '#FF4444';
-    ctx.beginPath(); ctx.moveTo(s * 0.4, -s * 0.08); ctx.lineTo(s * 0.75, -s * 0.02); ctx.lineTo(s * 0.4, s * 0.08); ctx.fill();
-  }
-
-  darken(hex, factor) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return 'rgb(' + Math.floor(r * factor) + ',' + Math.floor(g * factor) + ',' + Math.floor(b * factor) + ')';
   }
 }

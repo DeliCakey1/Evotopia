@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="body" cx="45%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#D4A76A"/>
+      <stop offset="50%" stop-color="#B8894E"/>
+      <stop offset="100%" stop-color="#8B693A"/>
+    </radialGradient>
+    <linearGradient id="wingGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A07848"/>
+      <stop offset="100%" stop-color="#6B4A28"/>
+    </linearGradient>
+    <linearGradient id="chestGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D6B88A"/>
+      <stop offset="100%" stop-color="#BFA070"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(50,50)">
+    <!-- Tail -->
+    <polygon points="-30,8 -50,-5 -48,18" fill="#6B4A28"/>
+    <line x1="-30" y1="10" x2="-48" y2="15" stroke="#5A3E1E" stroke-width="1" opacity="0.5"/>
+    <!-- Body -->
+    <ellipse cx="-2" cy="3" rx="32" ry="20" fill="url(#body)"/>
+    <!-- Chest -->
+    <ellipse cx="10" cy="8" rx="16" ry="14" fill="url(#chestGrad)" opacity="0.6"/>
+    <!-- Wing - broad -->
+    <path d="M-12,-10 Q0,-50 42,-18 Q22,-4 -10,-4Z" fill="url(#wingGrad)"/>
+    <path d="M-8,-8 Q5,-35 35,-10" fill="none" stroke="#5A3E1E" stroke-width="1"/>
+    <path d="M-6,-6 Q8,-25 28,-8" fill="none" stroke="#5A3E1E" stroke-width="0.8"/>
+    <!-- Head -->
+    <circle cx="33" cy="-8" r="15" fill="url(#body)"/>
+    <!-- Beak - hooked -->
+    <path d="M44,-12 Q56,-8 52,-3 L44,-2Z" fill="#D4A843"/>
+    <path d="M44,-7 Q54,-5 52,-3" fill="none" stroke="#B8922E" stroke-width="0.6"/>
+    <!-- Eye -->
+    <circle cx="38" cy="-12" r="4" fill="#1a1a1a"/>
+    <circle cx="39" cy="-13" r="1.8" fill="white"/>
+    <!-- Brow ridge -->
+    <path d="M34,-16 Q38,-19 42,-16" fill="none" stroke="#6B4A28" stroke-width="1.5"/>
+  </g>
+</svg>

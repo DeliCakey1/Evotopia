@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="body" cx="45%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FF8844"/>
+      <stop offset="50%" stop-color="#E85520"/>
+      <stop offset="100%" stop-color="#CC3300"/>
+    </radialGradient>
+    <linearGradient id="wingGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF6633"/>
+      <stop offset="50%" stop-color="#FF4400"/>
+      <stop offset="100%" stop-color="#CC2200"/>
+    </linearGradient>
+    <radialGradient id="flameGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="40%" stop-color="#FFAA00"/>
+      <stop offset="100%" stop-color="#FF4400"/>
+    </radialGradient>
+    <linearGradient id="tailGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF6633"/>
+      <stop offset="50%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#FF4400"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(50,50)">
+    <!-- Tail feathers - flame-like -->
+    <path d="M-25,10 Q-40,20 -55,15 Q-45,25 -60,30 Q-48,35 -50,45 Q-38,35 -30,40 Q-35,30 -28,25 Q-20,30 -25,20Z" fill="url(#tailGrad)"/>
+    <path d="M-22,15 Q-35,28 -48,22" fill="none" stroke="#FFD700" stroke-width="1.2" opacity="0.6"/>
+    <!-- Body - elegant -->
+    <ellipse cx="-2" cy="2" rx="30" ry="18" fill="url(#body)"/>
+    <ellipse cx="5" cy="6" rx="14" ry="12" fill="#FFAA44" opacity="0.3"/>
+    <!-- Wing - flame shaped -->
+    <path d="M-8,-10 Q2,-52 40,-22 Q18,-4 -8,-4Z" fill="url(#wingGrad)"/>
+    <path d="M-6,-8 Q5,-40 32,-14" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.5"/>
+    <path d="M-4,-6 Q8,-28 24,-8" fill="none" stroke="#FFD700" stroke-width="0.8" opacity="0.4"/>
+    <!-- Wing flame tips -->
+    <path d="M30,-18 Q38,-25 42,-28 Q36,-22 32,-18Z" fill="#FFD700" opacity="0.7"/>
+    <path d="M20,-12 Q28,-20 30,-22 Q25,-16 20,-12Z" fill="#FFD700" opacity="0.5"/>
+    <!-- Crest/head -->
+    <circle cx="30" cy="-10" r="14" fill="url(#body)"/>
+    <!-- Crest feathers -->
+    <path d="M25,-22 Q28,-32 22,-38 Q26,-30 28,-24Z" fill="#FFD700"/>
+    <path d="M30,-24 Q35,-34 32,-40 Q34,-32 32,-26Z" fill="#FFAA00"/>
+    <path d="M20,-20 Q22,-28 18,-34 Q20,-28 22,-22Z" fill="#FF4400"/>
+    <!-- Beak -->
+    <path d="M40,-12 Q52,-8 48,-2 L40,-1Z" fill="#FFD700"/>
+    <!-- Eye -->
+    <circle cx="34" cy="-14" r="4" fill="#1a1a1a"/>
+    <circle cx="35" cy="-15" r="1.8" fill="white"/>
+    <circle cx="35.5" cy="-15.5" r="0.8" fill="#FFD700"/>
+  </g>
+</svg>

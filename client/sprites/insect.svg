@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <radialGradient id="bugBody" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#A8D870"/>
+      <stop offset="60%" stop-color="#6BB830"/>
+      <stop offset="100%" stop-color="#409020"/>
+    </radialGradient>
+  </defs>
+  <g transform="translate(16,16)">
+    <!-- Body -->
+    <ellipse cx="0" cy="2" rx="7" ry="5" fill="url(#bugBody)"/>
+    <!-- Wings -->
+    <ellipse cx="-4" cy="-3" rx="5" ry="3" fill="#C8E8A0" opacity="0.6" transform="rotate(-20,-4,-3)"/>
+    <ellipse cx="4" cy="-3" rx="5" ry="3" fill="#C8E8A0" opacity="0.6" transform="rotate(20,4,-3)"/>
+    <!-- Head -->
+    <circle cx="7" cy="-1" r="3.5" fill="#409020"/>
+    <!-- Eyes -->
+    <circle cx="8.5" cy="-2.5" r="1.5" fill="#1a1a1a"/>
+    <circle cx="9" cy="-3" r="0.6" fill="white"/>
+    <!-- Antennae -->
+    <path d="M9,-2 Q13,-8 14,-6" fill="none" stroke="#306818" stroke-width="0.8"/>
+    <path d="M8,-3 Q11,-9 12,-8" fill="none" stroke="#306818" stroke-width="0.8"/>
+    <!-- Legs -->
+    <line x1="-2" y1="5" x2="-4" y2="9" stroke="#306818" stroke-width="0.8"/>
+    <line x1="2" y1="5" x2="4" y2="9" stroke="#306818" stroke-width="0.8"/>
+    <line x1="0" y1="5" x2="0" y2="9" stroke="#306818" stroke-width="0.8"/>
+  </g>
+</svg>
