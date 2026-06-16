@@ -11,7 +11,6 @@ class Food {
     this.size = typeDef.size;
     this.color = typeDef.color;
     this.xp = typeDef.xp;
-    this.diet = typeDef.diet;
     this.treeId = null;
     this.bushId = null;
     this.zoneId = null;

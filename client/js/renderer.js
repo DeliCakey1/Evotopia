@@ -318,22 +318,20 @@ class Renderer {
   }
 
   isFoodEdible(food, myPlayer) {
-    const FOOD_DIETS = {
-      'insect': ['small'], 'berry': ['small'], 'seed': ['small'], 'worm': ['small'],
-      'prey': ['carnivore'], 'fish': ['carnivore'],
-      'carrion': ['scavenger'],
-      'star': ['mythical'], 'orb': ['mythical'],
-    };
-    const TIER_DIETS = [
-      ['small'], ['small'], ['small', 'scavenger'],
-      ['carnivore'], ['carnivore'], ['scavenger', 'carnivore'], ['carnivore'],
-      ['small', 'carnivore', 'scavenger', 'mythical'],
-      ['small', 'carnivore', 'scavenger', 'mythical'],
+    const TIER_EATS = [
+      ['insect','berry','seed'],
+      ['insect','berry','worm'],
+      ['insect','seed','berry','worm','carrion','prey'],
+      ['prey'],
+      ['prey','carrion'],
+      ['carrion'],
+      ['prey','fish','carrion'],
+      ['insect','berry','seed','worm','prey','fish','carrion','star','orb'],
+      ['insect','berry','seed','worm','prey','fish','carrion','star','orb'],
     ];
-    const foodDiet = FOOD_DIETS[food.type];
-    const playerDiet = TIER_DIETS[myPlayer.tier];
-    if (!foodDiet || !playerDiet) return true;
-    return foodDiet.some(d => playerDiet.includes(d));
+    const eats = TIER_EATS[myPlayer.tier];
+    if (!eats) return true;
+    return eats.includes(food.type);
   }
 
   drawFood(ctx, food, myPlayer) {

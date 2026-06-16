@@ -1,4 +1,4 @@
-const { MAX_FOOD, INITIAL_FOOD, FOOD_RESPAWN_PER_TICK, MAP_HEIGHT, MAP_WIDTH, EVOLUTION_TIERS, BUSH_COUNT, WATER_ZONE_COUNT, BURROW_COUNT } = require('./config');
+const { MAX_FOOD, INITIAL_FOOD, FOOD_RESPAWN_PER_TICK, MAP_HEIGHT, MAP_WIDTH, EVOLUTION_TIERS, FOOD_TYPES, BUSH_COUNT, WATER_ZONE_COUNT, BURROW_COUNT } = require('./config');
 const Food = require('./food');
 const Tree = require('./tree');
 const Bush = require('./bush');
@@ -283,6 +283,10 @@ class Game {
         const xpLoss = Math.max(1, Math.floor(p2.xp * 0.15));
         p2.loseXp(xpLoss);
         const newTier = p1.addXp(5 + p2.tier * 3 + xpLoss);
+
+        const carrionDef = FOOD_TYPES.find(f => f.type === 'carrion');
+        const carrion = new Food(carrionDef, p2.x, p2.y);
+        this.foods.set(carrion.id, carrion);
         if (newTier >= 0) {
           this.evolveEvents.push({ playerId: p1.id, tier: newTier, tierName: p1.tierName });
         }
