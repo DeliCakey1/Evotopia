@@ -105,9 +105,9 @@ class Renderer {
   }
 
   initClouds() {
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 40; i++) {
       this.clouds.push({
-        x: Math.random() * 6500 - 250,
+        x: Math.random() * 12500 - 250,
         y: 100 + Math.random() * 1800,
         speed: 0.06 + Math.random() * 0.15,
         opacity: 0.15 + Math.random() * 0.25,
@@ -235,7 +235,7 @@ class Renderer {
 
     for (const c of this.clouds) {
       c.x += c.speed;
-      if (c.x > 6500) c.x = -250;
+      if (c.x > 12500) c.x = -250;
 
       const a = c.opacity * fade;
       if (a < 0.01) continue;

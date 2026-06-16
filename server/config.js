@@ -22,7 +22,7 @@ const FOOD_TYPES = [
   { type: 'orb',     xp: 5, size: 11, color: '#9B59B6' },
 ];
 
-const MAP_WIDTH = 6000;
+const MAP_WIDTH = 12000;
 const MAP_HEIGHT = 3100;
 const TICK_RATE = 16;
 const MAX_FOOD = 400;
