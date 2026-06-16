@@ -34,7 +34,7 @@
   let joined = false;
   let lastInputTime = 0;
 
-  const serverHost = 'ws://' + location.hostname + ':3001';
+  const serverHost = 'ws://' + location.hostname + ':' + location.port;
 
   function connect() {
     network.connect(serverHost);
