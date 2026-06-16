@@ -25,8 +25,8 @@
   const renderer = new Renderer(canvas);
 
   let myId = null;
-  let mapWidth = 4000;
-  let mapHeight = 4000;
+  let mapWidth = 6000;
+  let mapHeight = 2500;
   let lastState = { players: [], foods: [] };
   let myPlayer = null;
   let connected = false;
