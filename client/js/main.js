@@ -71,6 +71,8 @@
     mapWidth = msg.mapWidth;
     mapHeight = msg.mapHeight;
     renderer.setTrees(msg.trees);
+    renderer.setBushes(msg.bushes);
+    renderer.setWaterZones(msg.waterZones);
     joined = true;
     startScreen.classList.add('hidden');
     hud.classList.remove('hidden');

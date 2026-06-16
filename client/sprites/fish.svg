@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 24">
+  <defs>
+    <radialGradient id="fishGrad" cx="45%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#78B8E8"/>
+      <stop offset="50%" stop-color="#5090C0"/>
+      <stop offset="100%" stop-color="#386890"/>
+    </radialGradient>
+    <linearGradient id="bellyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#90C8E8"/>
+      <stop offset="100%" stop-color="#C8E8F8"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(20,12)">
+    <!-- Tail -->
+    <polygon points="-16,0 -22,-8 -22,8" fill="#386890"/>
+    <!-- Body -->
+    <ellipse cx="0" cy="0" rx="15" ry="8" fill="url(#fishGrad)"/>
+    <!-- Belly -->
+    <ellipse cx="2" cy="3" rx="10" ry="4" fill="url(#bellyGrad)" opacity="0.6"/>
+    <!-- Scales -->
+    <path d="M-4,-3 Q-2,-5 0,-3" fill="none" stroke="#60A0D0" stroke-width="0.6" opacity="0.5"/>
+    <path d="M2,-2 Q4,-4 6,-2" fill="none" stroke="#60A0D0" stroke-width="0.6" opacity="0.5"/>
+    <path d="M-2,0 Q0,-2 2,0" fill="none" stroke="#60A0D0" stroke-width="0.6" opacity="0.5"/>
+    <path d="M4,0 Q6,-2 8,0" fill="none" stroke="#60A0D0" stroke-width="0.6" opacity="0.5"/>
+    <!-- Dorsal fin -->
+    <path d="M-4,-7 Q0,-14 6,-6" fill="#4090B8" opacity="0.8"/>
+    <!-- Pectoral fin -->
+    <path d="M4,6 Q0,12 -2,7" fill="#4090B8" opacity="0.7"/>
+    <!-- Eye -->
+    <circle cx="10" cy="-2" r="3" fill="#1a1a1a"/>
+    <circle cx="11" cy="-3" r="1.2" fill="white"/>
+    <!-- Mouth -->
+    <path d="M16,0 Q17,1 16,2" fill="none" stroke="#1a1a1a" stroke-width="1" stroke-linecap="round"/>
+    <!-- Gill -->
+    <path d="M8,-5 Q7,0 8,5" fill="none" stroke="#386890" stroke-width="0.8" opacity="0.6"/>
+  </g>
+</svg>

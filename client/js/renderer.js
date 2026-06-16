@@ -33,6 +33,11 @@ class SpriteLoader {
       'dragon': 'sprites/dragon.svg',
       'insect': 'sprites/insect.svg',
       'berry': 'sprites/berry.svg',
+      'seed': 'sprites/seed.svg',
+      'worm': 'sprites/worm.svg',
+      'prey': 'sprites/prey.svg',
+      'fish': 'sprites/fish.svg',
+      'carrion': 'sprites/carrion.svg',
       'star': 'sprites/star.svg',
       'orb': 'sprites/orb.svg',
       'cloud': 'sprites/cloud.svg',
@@ -74,6 +79,8 @@ class Renderer {
     this.smoothScale = 1.5;
     this.clouds = [];
     this.trees = [];
+    this.bushes = [];
+    this.waterZones = [];
     this.smoothPlayers = {};
     this.sprites = new SpriteLoader();
     this.spritesReady = false;
@@ -87,6 +94,14 @@ class Renderer {
 
   setTrees(treeData) {
     this.trees = treeData || [];
+  }
+
+  setBushes(bushData) {
+    this.bushes = bushData || [];
+  }
+
+  setWaterZones(zoneData) {
+    this.waterZones = zoneData || [];
   }
 
   initClouds() {
@@ -131,6 +146,8 @@ class Renderer {
 
     this.drawClouds(ctx, cam.y, mapHeight);
     this.drawMapBorders(ctx, mapWidth, mapHeight);
+    this.drawWaterZones(ctx, cam.y, mapHeight);
+    this.drawBushes(ctx);
 
     if (state.foods) {
       for (const food of state.foods) {
@@ -229,6 +246,42 @@ class Renderer {
       ctx.drawImage(cloudImg, c.x - cw / 2, c.y - ch / 2, cw, ch);
     }
     ctx.globalAlpha = 1;
+  }
+
+  drawWaterZones(ctx, camY, mapHeight) {
+    const waterAlpha = Math.max(0, Math.min(1, 1 - (mapHeight - camY - 100) / 600));
+    if (waterAlpha < 0.01) return;
+
+    const now = Date.now() * 0.001;
+    for (const z of this.waterZones) {
+      const grad = ctx.createLinearGradient(z.x, z.y, z.x, z.y + z.h);
+      const b = Math.round(40 + (1 - waterAlpha) * 60);
+      grad.addColorStop(0, 'rgba(60,130,200,' + (0.5 * waterAlpha) + ')');
+      grad.addColorStop(0.5, 'rgba(40,100,180,' + (0.3 * waterAlpha) + ')');
+      grad.addColorStop(1, 'rgba(30,80,150,' + (0.15 * waterAlpha) + ')');
+      ctx.fillStyle = grad;
+      ctx.fillRect(z.x, z.y, z.w, z.h);
+
+      for (let i = 0; i < 5; i++) {
+        const wx = z.x + 10 + ((i * 37 + 13 + Math.sin(now + i * 1.7) * 5) % (z.w - 20));
+        const wy = z.y + 8 + i * (z.h - 16) / 4 + Math.sin(now * 1.3 + i * 0.9) * 3;
+        ctx.strokeStyle = 'rgba(180,220,255,' + (0.15 * waterAlpha) + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(wx, wy, 15 + Math.sin(now + i) * 3, 2, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+  }
+
+  drawBushes(ctx) {
+    const bushImg = this.sprites.get('bush');
+    if (!bushImg) return;
+
+    for (const b of this.bushes) {
+      const s = 0.7 + ((b.x * 7.3 + b.x * b.x * 0.01) % 0.3);
+      ctx.drawImage(bushImg, b.x - 10 * s, b.y - 18 * s, 20 * s, 36 * s);
+    }
   }
 
   drawMapBorders(ctx, mapWidth, mapHeight) {

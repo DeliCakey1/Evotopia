@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 24">
+  <defs>
+    <radialGradient id="preyGrad" cx="45%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#A08060"/>
+      <stop offset="50%" stop-color="#8A6A48"/>
+      <stop offset="100%" stop-color="#6A4E30"/>
+    </radialGradient>
+    <radialGradient id="earGrad" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#C0A080"/>
+      <stop offset="100%" stop-color="#A08060"/>
+    </radialGradient>
+  </defs>
+  <g transform="translate(20,14)">
+    <!-- Body -->
+    <ellipse cx="0" cy="0" rx="14" ry="7" fill="url(#preyGrad)"/>
+    <!-- Head -->
+    <ellipse cx="12" cy="-2" rx="7" ry="6" fill="#8A6A48"/>
+    <!-- Ears -->
+    <ellipse cx="10" cy="-9" rx="3" ry="5" fill="url(#earGrad)" transform="rotate(-15,10,-9)"/>
+    <ellipse cx="16" cy="-9" rx="3" ry="5" fill="url(#earGrad)" transform="rotate(15,16,-9)"/>
+    <!-- Inner ears -->
+    <ellipse cx="10" cy="-8" rx="1.5" ry="3" fill="#C0A080" opacity="0.5" transform="rotate(-15,10,-8)"/>
+    <ellipse cx="16" cy="-8" rx="1.5" ry="3" fill="#C0A080" opacity="0.5" transform="rotate(15,16,-8)"/>
+    <!-- Eye -->
+    <circle cx="15" cy="-3" r="2" fill="#1a1a1a"/>
+    <circle cx="15.5" cy="-3.5" r="0.8" fill="white"/>
+    <!-- Nose -->
+    <circle cx="19" cy="-1" r="0.8" fill="#6A4E30"/>
+    <!-- Whiskers -->
+    <line x1="18" y1="0" x2="24" y2="-3" stroke="#6A4E30" stroke-width="0.5" opacity="0.4"/>
+    <line x1="18" y1="0" x2="24" y2="1" stroke="#6A4E30" stroke-width="0.5" opacity="0.4"/>
+    <line x1="18" y1="0" x2="23" y2="4" stroke="#6A4E30" stroke-width="0.5" opacity="0.4"/>
+    <!-- Legs -->
+    <line x1="-6" y1="6" x2="-8" y2="9" stroke="#6A4E30" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-2" y1="6" x2="-3" y2="9" stroke="#6A4E30" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Tail -->
+    <path d="M-14,0 Q-18,-2 -20,2 Q-16,4 -14,2Z" fill="#6A4E30"/>
+  </g>
+</svg>

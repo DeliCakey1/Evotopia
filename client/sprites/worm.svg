@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 18">
+  <defs>
+    <radialGradient id="wormGrad" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#F0B090"/>
+      <stop offset="50%" stop-color="#D89070"/>
+      <stop offset="100%" stop-color="#B87058"/>
+    </radialGradient>
+  </defs>
+  <path d="M2,9 Q6,2 10,6 Q14,11 18,7 Q22,3 26,8" fill="none" stroke="url(#wormGrad)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M2,9 Q6,2 10,6 Q14,11 18,7 Q22,3 26,8" fill="none" stroke="#C08068" stroke-width="1.5" opacity="0.4"/>
+  <circle cx="26" cy="8" r="1" fill="#3A1A0A"/>
+  <!-- Segment lines -->
+  <path d="M6,5 Q6.5,7 6,9" fill="none" stroke="#A86850" stroke-width="0.5" opacity="0.5"/>
+  <path d="M10,5 Q10.5,7 10,8" fill="none" stroke="#A86850" stroke-width="0.5" opacity="0.5"/>
+  <path d="M14,6 Q14.5,8 14,9" fill="none" stroke="#A86850" stroke-width="0.5" opacity="0.5"/>
+  <path d="M18,5 Q18.5,7 18,8" fill="none" stroke="#A86850" stroke-width="0.5" opacity="0.5"/>
+</svg>

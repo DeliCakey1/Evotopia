@@ -1,4 +1,4 @@
-const { EVOLUTION_TIERS, MAP_WIDTH, MAP_HEIGHT, GRAVITY, FLAP_VELOCITY, THRUST, DIVE_SPEED, DRAG } = require('./config');
+const { EVOLUTION_TIERS, FOOD_TYPES, MAP_WIDTH, MAP_HEIGHT, GRAVITY, FLAP_VELOCITY, THRUST, DIVE_SPEED, DRAG } = require('./config');
 
 let nextId = 1;
 
@@ -27,6 +27,13 @@ class Player {
     this.dx = Math.max(-1, Math.min(1, dx));
     this.dy = Math.max(-1, Math.min(1, dy));
     if (dx !== 0) this.facingRight = dx > 0;
+  }
+
+  canEat(food) {
+    const tier = EVOLUTION_TIERS[this.tier];
+    const foodDef = FOOD_TYPES.find(f => f.type === food.type);
+    if (!tier.diet || !foodDef || !foodDef.diet) return true;
+    return foodDef.diet.some(d => tier.diet.includes(d));
   }
 
   flap() {
