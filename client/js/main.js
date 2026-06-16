@@ -151,6 +151,7 @@
 
   function gameLoop() {
     if (joined) {
+      input.update(Date.now());
       if (myPlayer) {
         renderer.updateCamera(myPlayer.x, myPlayer.y, myPlayer.size);
       }

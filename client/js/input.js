@@ -6,15 +6,13 @@ class Input {
     this.flap = false;
     this.lastDx = 0;
     this.lastDy = 0;
+    this.lastFlapMs = 0;
+    this.autoFlapInterval = 150;
 
     document.addEventListener('keydown', (e) => {
-      const key = e.key;
-      if (!e.repeat && (key === 'w' || key === 'W' || key === 'ArrowUp')) {
-        this.flap = true;
-      }
-      this.keys[key] = true;
+      this.keys[e.key] = true;
       this.updateDirection();
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         e.preventDefault();
       }
     });
@@ -28,7 +26,19 @@ class Input {
       this.keys = {};
       this.dx = 0;
       this.dy = 0;
+      this.lastFlapMs = 0;
     });
+  }
+
+  update(now) {
+    const wHeld = this.keys['w'] || this.keys['W'] || this.keys['ArrowUp'];
+    if (wHeld && now - this.lastFlapMs >= this.autoFlapInterval) {
+      this.flap = true;
+      this.lastFlapMs = now;
+    }
+    if (!wHeld) {
+      this.lastFlapMs = 0;
+    }
   }
 
   updateDirection() {
