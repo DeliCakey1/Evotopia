@@ -280,10 +280,9 @@ class Game {
         if (!this.pvpCooldowns) this.pvpCooldowns = new Map();
         this.pvpCooldowns.set(key, this.tickCount);
 
-        const xpGain = 5 + p2.tier * 3;
-        const xpLoss = Math.max(1, Math.floor(p2.xp * 0.3));
+        const xpLoss = Math.max(1, Math.floor(p2.xp * 0.15));
         p2.loseXp(xpLoss);
-        const newTier = p1.addXp(xpGain + xpLoss);
+        const newTier = p1.addXp(5 + p2.tier * 3 + xpLoss);
         if (newTier >= 0) {
           this.evolveEvents.push({ playerId: p1.id, tier: newTier, tierName: p1.tierName });
         }
