@@ -24,7 +24,6 @@ const EAT_RANGE = 0.6;
 
 const GRAVITY = 0.12;
 const FLAP_VELOCITY = 12;
-const LIFT_FORCE = 0.25;
 const THRUST = 0.20;
 const DIVE_SPEED = 0.25;
 const DRAG = 0.95;
@@ -41,7 +40,6 @@ module.exports = {
   EAT_RANGE,
   GRAVITY,
   FLAP_VELOCITY,
-  LIFT_FORCE,
   THRUST,
   DIVE_SPEED,
   DRAG,
