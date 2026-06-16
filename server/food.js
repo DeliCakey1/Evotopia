@@ -17,6 +17,7 @@ class Food {
   }
 
   static getSpawnPosition(type, sources) {
+    const groundY = MAP_HEIGHT - 200;
     switch (type) {
       case 'berry':
         if (sources.trees && sources.trees.length > 0) {
@@ -24,20 +25,20 @@ class Food {
           const pos = tree.getBerryPosition();
           return { x: pos.x, y: pos.y, tree };
         }
-        return { x: Math.random() * MAP_WIDTH, y: MAP_HEIGHT - 100 };
+        return { x: Math.random() * MAP_WIDTH, y: groundY - 100 - Math.random() * 80 };
       case 'seed':
         if (sources.bushes && sources.bushes.length > 0) {
           const bush = sources.bushes[Math.floor(Math.random() * sources.bushes.length)];
           const pos = bush.getSeedPosition();
           return { x: pos.x, y: pos.y, bush };
         }
-        return { x: Math.random() * MAP_WIDTH, y: MAP_HEIGHT - 30 };
+        return { x: Math.random() * MAP_WIDTH, y: groundY - 3 };
       case 'prey':
         if (sources.burrows && sources.burrows.length > 0) {
           const burrow = sources.burrows[Math.floor(Math.random() * sources.burrows.length)];
           return { x: burrow.x + (Math.random() - 0.5) * 40, y: burrow.y - 2 - Math.random() * 4, burrow };
         }
-        return { x: Math.random() * MAP_WIDTH, y: MAP_HEIGHT - 40 };
+        return { x: Math.random() * MAP_WIDTH, y: groundY - 3 };
       case 'fish':
         if (sources.waterZones && sources.waterZones.length > 0) {
           const zone = sources.waterZones[Math.floor(Math.random() * sources.waterZones.length)];
@@ -45,18 +46,18 @@ class Food {
           const fy = zone.y + Math.random() * zone.h * 0.6;
           return { x: fx, y: fy, zone };
         }
-        return { x: Math.random() * MAP_WIDTH, y: MAP_HEIGHT - 80 };
+        return { x: Math.random() * MAP_WIDTH, y: groundY - 40 };
       case 'worm':
-        return { x: Math.random() * MAP_WIDTH, y: MAP_HEIGHT - 40 - Math.random() * 60 };
+        return { x: Math.random() * MAP_WIDTH, y: groundY - 3 - Math.random() * 8 };
       case 'carrion':
-        return { x: Math.random() * MAP_WIDTH, y: MAP_HEIGHT - 45 - Math.random() * 15 };
+        return { x: Math.random() * MAP_WIDTH, y: groundY - 3 - Math.random() * 5 };
       case 'insect':
-        return { x: Math.random() * MAP_WIDTH, y: 150 + Math.random() * (MAP_HEIGHT - 450) };
+        return { x: Math.random() * MAP_WIDTH, y: 100 + Math.random() * (groundY - 500) };
       case 'star':
-        return { x: Math.random() * MAP_WIDTH, y: 10 + Math.random() * 390 };
+        return { x: Math.random() * MAP_WIDTH, y: 10 + Math.random() * 250 };
       case 'orb':
       default:
-        return { x: Math.random() * MAP_WIDTH, y: Math.random() * MAP_HEIGHT };
+        return { x: Math.random() * MAP_WIDTH, y: 20 + Math.random() * (groundY - 100) };
     }
   }
 
