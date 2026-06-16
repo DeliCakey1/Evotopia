@@ -34,6 +34,7 @@ class SpriteLoader {
       'orb': 'sprites/orb.svg',
       'cloud': 'sprites/cloud.svg',
       'tree': 'sprites/tree.svg',
+      'bush': 'sprites/bush.svg',
     };
 
     const names = Object.keys(sprites);
@@ -70,6 +71,7 @@ class Renderer {
     this.smoothScale = 1.5;
     this.clouds = [];
     this.groundTrees = [];
+    this.groundBushes = [];
     this.sprites = new SpriteLoader();
     this.spritesReady = false;
 
@@ -98,6 +100,12 @@ class Renderer {
       this.groundTrees.push({
         x: Math.random() * 6500 - 250,
         scale: 0.4 + Math.random() * 0.6,
+      });
+    }
+    for (let i = 0; i < 50; i++) {
+      this.groundBushes.push({
+        x: Math.random() * 6500 - 250,
+        scale: 0.5 + Math.random() * 0.5,
       });
     }
   }
@@ -239,6 +247,16 @@ class Renderer {
         const tw = 30 * t.scale;
         const th = 60 * t.scale;
         ctx.drawImage(treeImg, t.x - tw / 2, baseY - th, tw, th);
+      }
+    }
+
+    const bushImg = this.sprites.get('bush');
+    if (bushImg) {
+      for (const b of this.groundBushes) {
+        const baseY = groundY - 1 - Math.sin(b.x * 0.015) * 10 - Math.sin(b.x * 0.03) * 4;
+        const bw = 40 * b.scale;
+        const bh = 30 * b.scale;
+        ctx.drawImage(bushImg, b.x - bw / 2, baseY - bh, bw, bh);
       }
     }
   }

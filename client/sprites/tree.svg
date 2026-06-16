@@ -1,26 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 60">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 70">
   <defs>
     <linearGradient id="trunkGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#5A3E1E"/>
-      <stop offset="50%" stop-color="#7A5A30"/>
-      <stop offset="100%" stop-color="#4A3218"/>
+      <stop offset="0%" stop-color="#4A3218"/>
+      <stop offset="30%" stop-color="#6B4A28"/>
+      <stop offset="70%" stop-color="#7A5A34"/>
+      <stop offset="100%" stop-color="#3E2A14"/>
     </linearGradient>
-    <radialGradient id="foliageGrad" cx="50%" cy="40%" r="55%">
-      <stop offset="0%" stop-color="#44AA44"/>
-      <stop offset="60%" stop-color="#2D8A2D"/>
-      <stop offset="100%" stop-color="#1A6A1A"/>
+    <radialGradient id="foliage1" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#55BB55"/>
+      <stop offset="50%" stop-color="#3A9A3A"/>
+      <stop offset="100%" stop-color="#1A7A1A"/>
+    </radialGradient>
+    <radialGradient id="foliage2" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#4CB04C"/>
+      <stop offset="50%" stop-color="#2D8A2D"/>
+      <stop offset="100%" stop-color="#156A15"/>
     </radialGradient>
   </defs>
-  <g transform="translate(15,60)">
+  <g transform="translate(20,70)">
+    <!-- Branches -->
+    <line x1="0" y1="-28" x2="-8" y2="-22" stroke="#5A3E1E" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="0" y1="-24" x2="10" y2="-18" stroke="#5A3E1E" stroke-width="2" stroke-linecap="round"/>
     <!-- Trunk -->
-    <rect x="-3" y="-30" width="6" height="30" rx="1.5" fill="url(#trunkGrad)"/>
+    <path d="M-3,0 L-3.5,-30 Q-2,-33 0,-30 L0,0Z" fill="url(#trunkGrad)"/>
+    <path d="M3,0 L3.5,-30 Q2,-33 0,-30 L0,0Z" fill="#4A3218" opacity="0.6"/>
     <!-- Foliage layers -->
-    <polygon points="0,-55 -14,-28 14,-28" fill="url(#foliageGrad)"/>
-    <polygon points="0,-45 -12,-22 12,-22" fill="#2D8A2D"/>
-    <polygon points="0,-60 -10,-35 10,-35" fill="#44AA44"/>
-    <!-- Top highlight -->
-    <polygon points="0,-58 -5,-42 5,-42" fill="#55BB55" opacity="0.5"/>
+    <polygon points="0,-58 -16,-28 16,-28" fill="url(#foliage2)"/>
+    <polygon points="0,-50 -14,-22 14,-22" fill="url(#foliage1)"/>
+    <polygon points="0,-65 -12,-38 12,-38" fill="url(#foliage2)"/>
+    <polygon points="0,-55 -10,-32 10,-32" fill="#44AA44"/>
+    <!-- Top -->
+    <polygon points="0,-70 -8,-48 8,-48" fill="#55BB55"/>
+    <!-- Highlights -->
+    <polygon points="0,-68 -4,-52 4,-52" fill="#66CC66" opacity="0.5"/>
+    <polygon points="-2,-45 -8,-35 0,-35" fill="#66CC66" opacity="0.3"/>
     <!-- Shadow -->
-    <polygon points="0,-50 5,-35 10,-35" fill="#1A5A1A" opacity="0.3"/>
+    <polygon points="2,-56 6,-42 10,-42" fill="#1A5A1A" opacity="0.3"/>
+    <polygon points="4,-46 8,-36 12,-36" fill="#1A5A1A" opacity="0.2"/>
   </g>
 </svg>

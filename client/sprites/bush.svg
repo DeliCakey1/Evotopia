@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 30">
+  <defs>
+    <radialGradient id="bushGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#55BB55"/>
+      <stop offset="50%" stop-color="#3A9A3A"/>
+      <stop offset="100%" stop-color="#1A7A1A"/>
+    </radialGradient>
+    <radialGradient id="berryGrad" cx="35%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#FF6B9D"/>
+      <stop offset="50%" stop-color="#E84070"/>
+      <stop offset="100%" stop-color="#BB1144"/>
+    </radialGradient>
+  </defs>
+  <g transform="translate(20,28)">
+    <!-- Bush body -->
+    <ellipse cx="0" cy="-5" rx="16" ry="12" fill="#2D8A2D"/>
+    <ellipse cx="-6" cy="0" rx="12" ry="10" fill="url(#bushGrad)"/>
+    <ellipse cx="8" cy="-2" rx="11" ry="9" fill="#3A9A3A"/>
+    <ellipse cx="0" cy="-10" rx="10" ry="8" fill="#44AA44"/>
+    <ellipse cx="-4" cy="-12" rx="7" ry="6" fill="#55BB55"/>
+    <!-- Berries on bush -->
+    <circle cx="-8" cy="-4" r="2.5" fill="url(#berryGrad)"/>
+    <circle cx="-3" cy="-8" r="2" fill="url(#berryGrad)"/>
+    <circle cx="5" cy="-5" r="2.5" fill="url(#berryGrad)"/>
+    <circle cx="2" cy="-1" r="2" fill="url(#berryGrad)"/>
+    <circle cx="-6" cy="1" r="1.8" fill="#E84070"/>
+    <circle cx="8" cy="0" r="2" fill="#E84070"/>
+    <circle cx="0" cy="-6" r="1.5" fill="#FF6B9D"/>
+    <!-- Berry highlights -->
+    <circle cx="-8.5" cy="-5" r="0.8" fill="white" opacity="0.4"/>
+    <circle cx="4.5" cy="-6" r="0.8" fill="white" opacity="0.4"/>
+    <circle cx="-3.5" cy="-9" r="0.6" fill="white" opacity="0.4"/>
+    <!-- Ground shadow -->
+    <ellipse cx="0" cy="2" rx="14" ry="2" fill="#1A5A1A" opacity="0.15"/>
+  </g>
+</svg>
