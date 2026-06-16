@@ -99,6 +99,7 @@ class Game {
     this.foods = new Map();
     this.foodAccumulator = 0;
     this.evolveEvents = [];
+    this.tickCount = 0;
     this.trees = this.initTrees();
     this.bushes = this.initBushes();
     this.waterZones = this.initWaterZones();
@@ -220,6 +221,7 @@ class Game {
   }
 
   update() {
+    this.tickCount++;
     this.evolveEvents = [];
 
     for (const player of this.players.values()) {
@@ -258,6 +260,32 @@ class Game {
           if (newTier >= 0) {
             this.evolveEvents.push({ playerId: player.id, tier: newTier, tierName: player.tierName });
           }
+        }
+      }
+    }
+
+    // PvP eating
+    const pvpCooldown = 32;
+    for (const p1 of this.players.values()) {
+      if (!p1.alive) continue;
+      for (const p2 of this.players.values()) {
+        if (p1.id === p2.id || !p2.alive) continue;
+        if (!p1.canEatPlayer(p2)) continue;
+        const pHw = p1.size * 1.2;
+        const pHh = p1.size * 0.7;
+        if (Math.abs(p1.x - p2.x) >= pHw + p2.size * 1.2 || Math.abs(p1.y - p2.y) >= pHh + p2.size * 0.7) continue;
+        const key = p1.id + '-' + p2.id;
+        const last = this.pvpCooldowns?.get(key) || 0;
+        if (this.tickCount - last < pvpCooldown) continue;
+        if (!this.pvpCooldowns) this.pvpCooldowns = new Map();
+        this.pvpCooldowns.set(key, this.tickCount);
+
+        const xpGain = 5 + p2.tier * 3;
+        const xpLoss = Math.max(1, Math.floor(p2.xp * 0.3));
+        p2.loseXp(xpLoss);
+        const newTier = p1.addXp(xpGain + xpLoss);
+        if (newTier >= 0) {
+          this.evolveEvents.push({ playerId: p1.id, tier: newTier, tierName: p1.tierName });
         }
       }
     }

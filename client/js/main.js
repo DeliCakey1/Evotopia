@@ -161,7 +161,7 @@
       if (myPlayer) {
         renderer.updateCamera(myPlayer.x, myPlayer.y, myPlayer.size);
       }
-      renderer.render(lastState, myId, mapWidth, mapHeight);
+      renderer.render(lastState, myId, mapWidth, mapHeight, myPlayer);
       updateHUD();
       updateLeaderboard();
 

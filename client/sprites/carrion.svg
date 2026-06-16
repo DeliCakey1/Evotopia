@@ -1,31 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 24">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 28">
   <defs>
-    <radialGradient id="boneGrad" cx="45%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#C8B8A0"/>
-      <stop offset="50%" stop-color="#A89078"/>
-      <stop offset="100%" stop-color="#887060"/>
+    <radialGradient id="meatGrad" cx="45%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#C86850"/>
+      <stop offset="50%" stop-color="#A84838"/>
+      <stop offset="100%" stop-color="#782820"/>
+    </radialGradient>
+    <radialGradient id="boneGrad" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#D8C8A8"/>
+      <stop offset="100%" stop-color="#A89070"/>
     </radialGradient>
   </defs>
-  <g transform="translate(15,12)">
-    <!-- Skull -->
-    <ellipse cx="0" cy="0" rx="9" ry="7" fill="url(#boneGrad)"/>
-    <!-- Eye sockets -->
-    <ellipse cx="-3" cy="-1" rx="3.5" ry="3" fill="#2A1A0E"/>
-    <ellipse cx="4" cy="-1" rx="3.5" ry="3" fill="#2A1A0E"/>
-    <!-- Nose cavity -->
-    <path d="M-1,2 Q0,0 1,2 Q0,4 -1,2Z" fill="#2A1A0E"/>
-    <!-- Jaw -->
-    <path d="M-6,4 Q0,8 6,4" fill="none" stroke="#A89078" stroke-width="2" stroke-linecap="round"/>
-    <line x1="-4" y1="5" x2="-2" y2="3" stroke="#887060" stroke-width="0.8"/>
-    <line x1="4" y1="5" x2="2" y2="3" stroke="#887060" stroke-width="0.8"/>
-    <line x1="0" y1="6" x2="0" y2="3" stroke="#887060" stroke-width="0.8"/>
-    <!-- Crack -->
-    <path d="M4,-4 Q6,-2 5,0" fill="none" stroke="#887060" stroke-width="0.8" opacity="0.5"/>
-    <!-- Crossbones -->
-    <g opacity="0.7">
-      <line x1="-12" y1="10" x2="-2" y2="6" stroke="#A89078" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="-2" y1="10" x2="-12" y2="6" stroke="#A89078" stroke-width="2.5" stroke-linecap="round"/>
-      <circle cx="-7" cy="8" r="2" fill="none" stroke="#A89078" stroke-width="1.5"/>
-    </g>
+  <g transform="translate(18,14)">
+    <path d="M-10,2 Q-12,-4 -6,-8 Q0,-10 4,-6 Q10,-8 12,-2 Q14,4 8,6 Q6,10 0,8 Q-6,10 -10,2Z" fill="url(#meatGrad)"/>
+    <path d="M-8,0 Q-6,-6 0,-4 Q4,-2 2,4 Q0,6 -4,4 Q-8,6 -8,0Z" fill="#883830" opacity="0.4"/>
+    <ellipse cx="-6" cy="4" rx="1.5" ry="0.8" fill="#601810" opacity="0.4"/>
+    <ellipse cx="3" cy="5" rx="1" ry="0.6" fill="#601810" opacity="0.4"/>
+    <path d="M6,-10 Q10,-14 14,-12 Q12,-8 6,-6Z" fill="url(#boneGrad)"/>
+    <path d="M4,-6 Q8,-10 12,-8" fill="none" stroke="#A89070" stroke-width="0.8" opacity="0.5"/>
+    <circle cx="10" cy="-11" r="2" fill="none" stroke="#A89070" stroke-width="1"/>
+    <path d="M10,-11 L10,-8" stroke="#A89070" stroke-width="0.8"/>
   </g>
 </svg>

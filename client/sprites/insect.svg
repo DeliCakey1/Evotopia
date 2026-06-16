@@ -1,28 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 28">
   <defs>
-    <radialGradient id="bugBody" cx="40%" cy="35%" r="60%">
-      <stop offset="0%" stop-color="#A8D870"/>
-      <stop offset="60%" stop-color="#6BB830"/>
-      <stop offset="100%" stop-color="#409020"/>
+    <radialGradient id="bodyGrad" cx="45%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#80D060"/>
+      <stop offset="50%" stop-color="#50A830"/>
+      <stop offset="100%" stop-color="#308018"/>
+    </radialGradient>
+    <radialGradient id="headGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#60B840"/>
+      <stop offset="100%" stop-color="#206010"/>
     </radialGradient>
   </defs>
-  <g transform="translate(16,16)">
-    <!-- Body -->
-    <ellipse cx="0" cy="2" rx="7" ry="5" fill="url(#bugBody)"/>
-    <!-- Wings -->
-    <ellipse cx="-4" cy="-3" rx="5" ry="3" fill="#C8E8A0" opacity="0.6" transform="rotate(-20,-4,-3)"/>
-    <ellipse cx="4" cy="-3" rx="5" ry="3" fill="#C8E8A0" opacity="0.6" transform="rotate(20,4,-3)"/>
-    <!-- Head -->
-    <circle cx="7" cy="-1" r="3.5" fill="#409020"/>
-    <!-- Eyes -->
-    <circle cx="8.5" cy="-2.5" r="1.5" fill="#1a1a1a"/>
-    <circle cx="9" cy="-3" r="0.6" fill="white"/>
-    <!-- Antennae -->
-    <path d="M9,-2 Q13,-8 14,-6" fill="none" stroke="#306818" stroke-width="0.8"/>
-    <path d="M8,-3 Q11,-9 12,-8" fill="none" stroke="#306818" stroke-width="0.8"/>
-    <!-- Legs -->
-    <line x1="-2" y1="5" x2="-4" y2="9" stroke="#306818" stroke-width="0.8"/>
-    <line x1="2" y1="5" x2="4" y2="9" stroke="#306818" stroke-width="0.8"/>
-    <line x1="0" y1="5" x2="0" y2="9" stroke="#306818" stroke-width="0.8"/>
+  <g transform="translate(17,14)">
+    <ellipse cx="-5" cy="1" rx="8" ry="4" fill="url(#bodyGrad)"/>
+    <ellipse cx="5" cy="0" rx="4" ry="3.5" fill="url(#headGrad)"/>
+    <ellipse cx="-3" cy="-5" rx="6" ry="3" fill="#C8E8A0" opacity="0.5" transform="rotate(-15,-3,-5)"/>
+    <ellipse cx="-3" cy="-5" rx="5" ry="2.5" fill="#D8F0B0" opacity="0.4" transform="rotate(-30,-3,-5)"/>
+    <ellipse cx="-3" cy="6" rx="5" ry="2.5" fill="#C8E8A0" opacity="0.4" transform="rotate(10,-3,6)"/>
+    <circle cx="6.5" cy="-1.5" r="1.8" fill="#1a1a1a"/>
+    <circle cx="7" cy="-2" r="0.7" fill="white"/>
+    <path d="M8,-2 Q12,-8 14,-6" fill="none" stroke="#206010" stroke-width="0.6"/>
+    <path d="M7,-3 Q10,-10 12,-9" fill="none" stroke="#206010" stroke-width="0.6"/>
+    <line x1="-6" y1="3" x2="-9" y2="7" stroke="#308018" stroke-width="0.7"/>
+    <line x1="-4" y1="4" x2="-6" y2="8" stroke="#308018" stroke-width="0.7"/>
+    <line x1="-1" y1="3" x2="-3" y2="7" stroke="#308018" stroke-width="0.7"/>
   </g>
 </svg>

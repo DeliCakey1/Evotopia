@@ -36,6 +36,14 @@ class Player {
     return foodDef.diet.some(d => tier.diet.includes(d));
   }
 
+  canEatPlayer(other) {
+    return this.tier > other.tier;
+  }
+
+  loseXp(amount) {
+    this.xp = Math.max(0, this.xp - amount);
+  }
+
   flap() {
     this.vy = -FLAP_VELOCITY;
   }

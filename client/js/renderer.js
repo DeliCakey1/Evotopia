@@ -131,7 +131,7 @@ class Renderer {
     this.camera.scale = this.smoothScale;
   }
 
-  render(state, myId, mapWidth, mapHeight) {
+  render(state, myId, mapWidth, mapHeight, myPlayer) {
     const { ctx, camera: cam } = this;
     const w = this.canvas.width;
     const h = this.canvas.height;
@@ -149,18 +149,18 @@ class Renderer {
     this.drawWaterZones(ctx, cam.y, mapHeight);
     this.drawBushes(ctx);
 
-    if (state.foods) {
+    if (state.foods && myPlayer) {
       for (const food of state.foods) {
-        this.drawFood(ctx, food);
+        this.drawFood(ctx, food, myPlayer);
       }
     }
 
-    if (state.players) {
+    if (state.players && myPlayer) {
       this.updateSmoothPlayers(state.players, myId);
       for (const p of state.players) {
         const smooth = this.smoothPlayers[p.id];
         if (smooth) {
-          this.drawPlayer(ctx, { ...p, x: smooth.x, y: smooth.y }, p.id === myId);
+          this.drawPlayer(ctx, { ...p, x: smooth.x, y: smooth.y }, p.id === myId, myPlayer);
         }
       }
     }
@@ -317,32 +317,56 @@ class Renderer {
     }
   }
 
-  drawFood(ctx, food) {
+  isFoodEdible(food, myPlayer) {
+    const FOOD_DIETS = {
+      'insect': ['small'], 'berry': ['small'], 'seed': ['small'], 'worm': ['small'],
+      'prey': ['carnivore'], 'fish': ['carnivore'],
+      'carrion': ['scavenger'],
+      'star': ['mythical'], 'orb': ['mythical'],
+    };
+    const TIER_DIETS = [
+      ['small'], ['small'], ['small', 'scavenger'],
+      ['carnivore'], ['carnivore'], ['scavenger', 'carnivore'], ['carnivore'],
+      ['small', 'carnivore', 'scavenger', 'mythical'],
+      ['small', 'carnivore', 'scavenger', 'mythical'],
+    ];
+    const foodDiet = FOOD_DIETS[food.type];
+    const playerDiet = TIER_DIETS[myPlayer.tier];
+    if (!foodDiet || !playerDiet) return true;
+    return foodDiet.some(d => playerDiet.includes(d));
+  }
+
+  drawFood(ctx, food, myPlayer) {
     const s = food.size * 2;
+    const edible = this.isFoodEdible(food, myPlayer);
     const img = this.sprites.get(food.type);
+    ctx.save();
+    ctx.translate(food.x, food.y);
+
+    if (edible) {
+      ctx.strokeStyle = 'rgba(50,220,80,0.7)';
+      ctx.lineWidth = 1.5;
+      const pad = 3;
+      ctx.strokeRect(-s / 2 - pad, -s / 2 - pad, s + pad * 2, s + pad * 2);
+    }
+
+    ctx.shadowColor = food.color;
+    ctx.shadowBlur = edible ? 12 : 8;
+
     if (img) {
-      ctx.save();
-      ctx.translate(food.x, food.y);
-      ctx.shadowColor = food.color;
-      ctx.shadowBlur = 8;
       ctx.drawImage(img, -s / 2, -s / 2, s, s);
-      ctx.shadowBlur = 0;
-      ctx.restore();
     } else {
-      ctx.save();
-      ctx.translate(food.x, food.y);
-      ctx.shadowColor = food.color;
-      ctx.shadowBlur = 6;
       ctx.fillStyle = food.color;
       ctx.beginPath();
       ctx.arc(0, 0, food.size, 0, Math.PI * 2);
       ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.restore();
     }
+
+    ctx.shadowBlur = 0;
+    ctx.restore();
   }
 
-  drawPlayer(ctx, p, isMe) {
+  drawPlayer(ctx, p, isMe, myPlayer) {
     const img = this.sprites.get(p.tierName.toLowerCase());
     const s = p.size;
 
@@ -365,6 +389,26 @@ class Renderer {
 
     ctx.shadowBlur = 0;
     ctx.restore();
+
+    if (!isMe && myPlayer) {
+      const hw = s * 1.2;
+      const hh = s * 0.7;
+      if (p.tier > myPlayer.tier) {
+        ctx.strokeStyle = 'rgba(255,50,50,0.8)';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = 'rgba(255,50,50,0.5)';
+        ctx.shadowBlur = 10;
+        ctx.strokeRect(p.x - hw - 4, p.y - hh - 4, hw * 2 + 8, hh * 2 + 8);
+        ctx.shadowBlur = 0;
+      } else if (p.tier < myPlayer.tier) {
+        ctx.strokeStyle = 'rgba(50,220,80,0.7)';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = 'rgba(50,220,80,0.4)';
+        ctx.shadowBlur = 10;
+        ctx.strokeRect(p.x - hw - 4, p.y - hh - 4, hw * 2 + 8, hh * 2 + 8);
+        ctx.shadowBlur = 0;
+      }
+    }
 
     if (isMe) {
       const hw = s * 1.2;
