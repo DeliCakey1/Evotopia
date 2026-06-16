@@ -2,34 +2,50 @@ const { FOOD_TYPES, MAP_WIDTH, MAP_HEIGHT } = require('./config');
 
 let nextFoodId = 1;
 
-function getSpawnY(type) {
-  switch (type) {
-    case 'berry':
-      return MAP_HEIGHT - 180 + Math.random() * 160;
-    case 'insect':
-      return 150 + Math.random() * (MAP_HEIGHT - 450);
-    case 'star':
-      return 10 + Math.random() * 390;
-    case 'orb':
-      return Math.random() * MAP_HEIGHT;
-    default:
-      return Math.random() * MAP_HEIGHT;
-  }
-}
-
 class Food {
-  constructor(type) {
+  constructor(typeDef, trees) {
     this.id = nextFoodId++;
-    this.type = type.type;
-    this.x = Math.random() * MAP_WIDTH;
-    this.y = getSpawnY(this.type);
-    this.size = type.size;
-    this.color = type.color;
-    this.xp = type.xp;
+    this.type = typeDef.type;
+
+    const pos = this.getSpawnPosition(typeDef.type, trees);
+    this.x = pos.x;
+    this.y = pos.y;
+
+    this.size = typeDef.size;
+    this.color = typeDef.color;
+    this.xp = typeDef.xp;
   }
 
-  static random() {
-    return new Food(FOOD_TYPES[Math.floor(Math.random() * FOOD_TYPES.length)]);
+  getSpawnPosition(type, trees) {
+    switch (type) {
+      case 'berry':
+        if (trees && trees.length > 0) {
+          const tree = trees[Math.floor(Math.random() * trees.length)];
+          return tree.getBerryPosition();
+        }
+        return { x: Math.random() * MAP_WIDTH, y: MAP_HEIGHT - 100 };
+      case 'insect':
+        return {
+          x: Math.random() * MAP_WIDTH,
+          y: 150 + Math.random() * (MAP_HEIGHT - 450),
+        };
+      case 'star':
+        return {
+          x: Math.random() * MAP_WIDTH,
+          y: 10 + Math.random() * 390,
+        };
+      case 'orb':
+      default:
+        return {
+          x: Math.random() * MAP_WIDTH,
+          y: Math.random() * MAP_HEIGHT,
+        };
+    }
+  }
+
+  static random(trees) {
+    const typeDef = FOOD_TYPES[Math.floor(Math.random() * FOOD_TYPES.length)];
+    return new Food(typeDef, trees);
   }
 
   serialize() {

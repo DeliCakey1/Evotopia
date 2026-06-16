@@ -67,6 +67,7 @@
     myId = msg.id;
     mapWidth = msg.mapWidth;
     mapHeight = msg.mapHeight;
+    renderer.setTrees(msg.trees);
     joined = true;
     startScreen.classList.add('hidden');
     hud.classList.remove('hidden');

@@ -1,41 +1,86 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 70">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160">
   <defs>
     <linearGradient id="trunkGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#4A3218"/>
-      <stop offset="30%" stop-color="#6B4A28"/>
-      <stop offset="70%" stop-color="#7A5A34"/>
-      <stop offset="100%" stop-color="#3E2A14"/>
+      <stop offset="0%" stop-color="#3E2A14"/>
+      <stop offset="25%" stop-color="#5A3E1E"/>
+      <stop offset="60%" stop-color="#6B4A24"/>
+      <stop offset="100%" stop-color="#2A1A0E"/>
     </linearGradient>
-    <radialGradient id="foliage1" cx="50%" cy="40%" r="55%">
+    <radialGradient id="canopyGrad" cx="50%" cy="45%" r="50%">
       <stop offset="0%" stop-color="#55BB55"/>
-      <stop offset="50%" stop-color="#3A9A3A"/>
-      <stop offset="100%" stop-color="#1A7A1A"/>
+      <stop offset="40%" stop-color="#3A9A3A"/>
+      <stop offset="75%" stop-color="#2A7A2A"/>
+      <stop offset="100%" stop-color="#1A5A1A"/>
     </radialGradient>
-    <radialGradient id="foliage2" cx="50%" cy="40%" r="55%">
-      <stop offset="0%" stop-color="#4CB04C"/>
-      <stop offset="50%" stop-color="#2D8A2D"/>
-      <stop offset="100%" stop-color="#156A15"/>
+    <radialGradient id="berryGrad" cx="35%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#FF6B9D"/>
+      <stop offset="45%" stop-color="#E84070"/>
+      <stop offset="100%" stop-color="#BB1144"/>
+    </radialGradient>
+    <radialGradient id="berryGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FF8DB5"/>
+      <stop offset="100%" stop-color="#FF4D85"/>
     </radialGradient>
   </defs>
-  <g transform="translate(20,70)">
-    <!-- Branches -->
-    <line x1="0" y1="-28" x2="-8" y2="-22" stroke="#5A3E1E" stroke-width="2.5" stroke-linecap="round"/>
-    <line x1="0" y1="-24" x2="10" y2="-18" stroke="#5A3E1E" stroke-width="2" stroke-linecap="round"/>
+  <g transform="translate(60,160)">
+    <!-- Roots -->
+    <path d="M-6,0 Q-15,3 -20,8" fill="none" stroke="#3E2A14" stroke-width="3" stroke-linecap="round"/>
+    <path d="M6,0 Q15,3 22,7" fill="none" stroke="#3E2A14" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-3,0 Q-8,5 -12,10" fill="none" stroke="#3E2A14" stroke-width="2" stroke-linecap="round"/>
     <!-- Trunk -->
-    <path d="M-3,0 L-3.5,-30 Q-2,-33 0,-30 L0,0Z" fill="url(#trunkGrad)"/>
-    <path d="M3,0 L3.5,-30 Q2,-33 0,-30 L0,0Z" fill="#4A3218" opacity="0.6"/>
-    <!-- Foliage layers -->
-    <polygon points="0,-58 -16,-28 16,-28" fill="url(#foliage2)"/>
-    <polygon points="0,-50 -14,-22 14,-22" fill="url(#foliage1)"/>
-    <polygon points="0,-65 -12,-38 12,-38" fill="url(#foliage2)"/>
-    <polygon points="0,-55 -10,-32 10,-32" fill="#44AA44"/>
-    <!-- Top -->
-    <polygon points="0,-70 -8,-48 8,-48" fill="#55BB55"/>
-    <!-- Highlights -->
-    <polygon points="0,-68 -4,-52 4,-52" fill="#66CC66" opacity="0.5"/>
-    <polygon points="-2,-45 -8,-35 0,-35" fill="#66CC66" opacity="0.3"/>
-    <!-- Shadow -->
-    <polygon points="2,-56 6,-42 10,-42" fill="#1A5A1A" opacity="0.3"/>
-    <polygon points="4,-46 8,-36 12,-36" fill="#1A5A1A" opacity="0.2"/>
+    <path d="M-7,0 L-8,-70 Q-6,-80 0,-80 L0,0Z" fill="url(#trunkGrad)"/>
+    <path d="M7,0 L8,-70 Q6,-80 0,-80 L0,0Z" fill="#3E2A14" opacity="0.5"/>
+    <!-- Trunk texture -->
+    <path d="M-3,-20 Q-1,-25 -4,-30" fill="none" stroke="#2A1A0E" stroke-width="0.8" opacity="0.4"/>
+    <path d="M2,-35 Q4,-40 1,-45" fill="none" stroke="#2A1A0E" stroke-width="0.8" opacity="0.4"/>
+    <path d="M-4,-50 Q-2,-55 -5,-60" fill="none" stroke="#2A1A0E" stroke-width="0.8" opacity="0.4"/>
+    <!-- Branch left -->
+    <path d="M-5,-55 Q-20,-50 -40,-40" fill="none" stroke="#5A3E1E" stroke-width="4" stroke-linecap="round"/>
+    <path d="M-5,-60 Q-15,-48 -30,-42" fill="none" stroke="#5A3E1E" stroke-width="3" stroke-linecap="round"/>
+    <!-- Branch right -->
+    <path d="M5,-50 Q22,-45 42,-38" fill="none" stroke="#5A3E1E" stroke-width="4" stroke-linecap="round"/>
+    <path d="M5,-58 Q18,-46 35,-42" fill="none" stroke="#5A3E1E" stroke-width="3" stroke-linecap="round"/>
+    <!-- Canopy base -->
+    <ellipse cx="0" cy="-68" rx="52" ry="38" fill="url(#canopyGrad)"/>
+    <!-- Canopy top layers -->
+    <ellipse cx="-15" cy="-80" rx="38" ry="30" fill="#3A9A3A"/>
+    <ellipse cx="18" cy="-78" rx="35" ry="28" fill="#2A8A2A"/>
+    <ellipse cx="0" cy="-92" rx="30" ry="25" fill="#44AA44"/>
+    <ellipse cx="-10" cy="-100" rx="22" ry="18" fill="#55BB55"/>
+    <ellipse cx="12" cy="-98" rx="20" ry="16" fill="#4CB04C"/>
+    <ellipse cx="0" cy="-108" rx="14" ry="12" fill="#66CC66"/>
+    <!-- Canopy highlights -->
+    <ellipse cx="-8" cy="-105" rx="8" ry="6" fill="#77DD77" opacity="0.4"/>
+    <ellipse cx="5" cy="-75" rx="20" ry="12" fill="#55BB55" opacity="0.3"/>
+    <!-- Canopy shadow -->
+    <ellipse cx="20" cy="-58" rx="20" ry="14" fill="#1A5A1A" opacity="0.2"/>
+    <ellipse cx="-25" cy="-60" rx="15" ry="10" fill="#1A5A1A" opacity="0.15"/>
+    <!-- Cherries on tree -->
+    <circle cx="-18" cy="-72" r="4" fill="url(#berryGrad)"/>
+    <circle cx="-18.5" cy="-73.5" r="1.2" fill="white" opacity="0.35"/>
+    <circle cx="-14" cy="-65" r="3.5" fill="url(#berryGlow)"/>
+    <circle cx="-14.5" cy="-66.5" r="1" fill="white" opacity="0.3"/>
+    <circle cx="8" cy="-80" r="4" fill="url(#berryGrad)"/>
+    <circle cx="7.5" cy="-81.5" r="1.2" fill="white" opacity="0.35"/>
+    <circle cx="22" cy="-74" r="3" fill="url(#berryGlow)"/>
+    <circle cx="21.5" cy="-75.5" r="1" fill="white" opacity="0.3"/>
+    <circle cx="-5" cy="-90" r="3.5" fill="url(#berryGrad)"/>
+    <circle cx="-5.5" cy="-91.5" r="1" fill="white" opacity="0.35"/>
+    <circle cx="15" cy="-86" r="3" fill="url(#berryGlow)"/>
+    <circle cx="-24" cy="-60" r="3" fill="url(#berryGrad)"/>
+    <circle cx="-24.5" cy="-61.5" r="1" fill="white" opacity="0.3"/>
+    <circle cx="28" cy="-65" r="3.5" fill="url(#berryGrad)"/>
+    <circle cx="27.5" cy="-66.5" r="1" fill="white" opacity="0.35"/>
+    <circle cx="0" cy="-68" r="3" fill="url(#berryGlow)"/>
+    <circle cx="-10" cy="-78" r="2.5" fill="url(#berryGrad)"/>
+    <circle cx="12" cy="-95" r="2.5" fill="url(#berryGrad)"/>
+    <circle cx="-6" cy="-100" r="2" fill="url(#berryGlow)"/>
+    <!-- Leaf details -->
+    <ellipse cx="-30" cy="-50" rx="6" ry="3" fill="#3A9A3A" transform="rotate(-30,-30,-50)"/>
+    <ellipse cx="32" cy="-48" rx="5" ry="3" fill="#3A9A3A" transform="rotate(25,32,-48)"/>
+    <ellipse cx="-20" cy="-110" rx="5" ry="2.5" fill="#55BB55" transform="rotate(-15,-20,-110)"/>
+    <ellipse cx="18" cy="-105" rx="4" ry="2.5" fill="#55BB55" transform="rotate(20,18,-105)"/>
+    <!-- Ground shadow -->
+    <ellipse cx="0" cy="2" rx="35" ry="4" fill="#1A5A1A" opacity="0.15"/>
   </g>
 </svg>

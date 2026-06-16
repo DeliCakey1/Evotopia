@@ -61,6 +61,7 @@ wss.on('connection', (ws) => {
           id: player.id,
           mapWidth: MAP_WIDTH,
           mapHeight: MAP_HEIGHT,
+          trees: game.trees.map(t => ({ x: t.x, y: t.y, height: t.height, canopyWidth: t.canopyWidth })),
         }));
 
         console.log(player.name + ' joined (id=' + player.id + ', tier=' + player.tierName + ')');

@@ -70,8 +70,7 @@ class Renderer {
     this.smoothY = 0;
     this.smoothScale = 1.5;
     this.clouds = [];
-    this.groundTrees = [];
-    this.groundBushes = [];
+    this.trees = [];
     this.sprites = new SpriteLoader();
     this.spritesReady = false;
 
@@ -80,7 +79,10 @@ class Renderer {
     });
 
     this.initClouds();
-    this.initGround();
+  }
+
+  setTrees(treeData) {
+    this.trees = treeData || [];
   }
 
   initClouds() {
@@ -91,21 +93,6 @@ class Renderer {
         speed: 0.06 + Math.random() * 0.15,
         opacity: 0.15 + Math.random() * 0.25,
         scale: 0.5 + Math.random() * 0.8,
-      });
-    }
-  }
-
-  initGround() {
-    for (let i = 0; i < 60; i++) {
-      this.groundTrees.push({
-        x: Math.random() * 6500 - 250,
-        scale: 0.4 + Math.random() * 0.6,
-      });
-    }
-    for (let i = 0; i < 50; i++) {
-      this.groundBushes.push({
-        x: Math.random() * 6500 - 250,
-        scale: 0.5 + Math.random() * 0.5,
       });
     }
   }
@@ -242,21 +229,11 @@ class Renderer {
 
     const treeImg = this.sprites.get('tree');
     if (treeImg) {
-      for (const t of this.groundTrees) {
-        const baseY = groundY - 3 - Math.sin(t.x * 0.012) * 12 - Math.sin(t.x * 0.025) * 5 - Math.sin(t.x * 0.04) * 3;
-        const tw = 30 * t.scale;
-        const th = 60 * t.scale;
-        ctx.drawImage(treeImg, t.x - tw / 2, baseY - th, tw, th);
-      }
-    }
-
-    const bushImg = this.sprites.get('bush');
-    if (bushImg) {
-      for (const b of this.groundBushes) {
-        const baseY = groundY - 1 - Math.sin(b.x * 0.015) * 10 - Math.sin(b.x * 0.03) * 4;
-        const bw = 40 * b.scale;
-        const bh = 30 * b.scale;
-        ctx.drawImage(bushImg, b.x - bw / 2, baseY - bh, bw, bh);
+      for (const t of this.trees) {
+        const baseY = groundY - 2 - Math.sin(t.x * 0.012) * 12 - Math.sin(t.x * 0.025) * 5;
+        const drawW = t.canopyWidth * 1.3;
+        const drawH = t.height * 1.15;
+        ctx.drawImage(treeImg, t.x - drawW / 2, baseY - drawH, drawW, drawH);
       }
     }
   }

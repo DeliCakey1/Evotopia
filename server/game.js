@@ -1,5 +1,6 @@
-const { MAX_FOOD, INITIAL_FOOD, FOOD_RESPAWN_PER_TICK, EAT_RANGE } = require('./config');
+const { MAX_FOOD, INITIAL_FOOD, FOOD_RESPAWN_PER_TICK, EAT_RANGE, MAP_HEIGHT, MAP_WIDTH } = require('./config');
 const Food = require('./food');
+const Tree = require('./tree');
 
 class Game {
   constructor() {
@@ -7,12 +8,25 @@ class Game {
     this.foods = new Map();
     this.foodAccumulator = 0;
     this.evolveEvents = [];
+    this.trees = this.initTrees();
     this.initFood();
+  }
+
+  initTrees() {
+    const trees = [];
+    const groundY = MAP_HEIGHT - 45;
+    const count = 28;
+    const spacing = MAP_WIDTH / count;
+    for (let i = 0; i < count; i++) {
+      const x = spacing * i + spacing * 0.2 + Math.random() * spacing * 0.5;
+      trees.push(new Tree(i, x, groundY));
+    }
+    return trees;
   }
 
   initFood() {
     for (let i = 0; i < INITIAL_FOOD; i++) {
-      const food = Food.random();
+      const food = Food.random(this.trees);
       this.foods.set(food.id, food);
     }
   }
@@ -52,7 +66,7 @@ class Game {
     this.foodAccumulator += FOOD_RESPAWN_PER_TICK;
     while (this.foodAccumulator >= 1 && this.foods.size < MAX_FOOD) {
       this.foodAccumulator--;
-      const food = Food.random();
+      const food = Food.random(this.trees);
       this.foods.set(food.id, food);
     }
   }
