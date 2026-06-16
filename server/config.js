@@ -16,7 +16,7 @@ const FOOD_TYPES = [
 
 const MAP_WIDTH = 6000;
 const MAP_HEIGHT = 2500;
-const TICK_RATE = 20;
+const TICK_RATE = 16;
 const MAX_FOOD = 300;
 const INITIAL_FOOD = 150;
 const FOOD_RESPAWN_PER_TICK = 0.2;

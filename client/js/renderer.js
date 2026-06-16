@@ -71,6 +71,7 @@ class Renderer {
     this.smoothScale = 1.5;
     this.clouds = [];
     this.trees = [];
+    this.smoothPlayers = {};
     this.sprites = new SpriteLoader();
     this.spritesReady = false;
 
@@ -105,8 +106,8 @@ class Renderer {
   updateCamera(followX, followY, playerSize) {
     const targetScale = Math.max(0.9, 1.5 - (playerSize - 16) * 0.015);
     this.smoothScale += (targetScale - this.smoothScale) * 0.05;
-    this.smoothX += (followX - this.smoothX) * 0.08;
-    this.smoothY += (followY - this.smoothY) * 0.08;
+    this.smoothX += (followX - this.smoothX) * 0.12;
+    this.smoothY += (followY - this.smoothY) * 0.12;
     this.camera.x = this.smoothX;
     this.camera.y = this.smoothY;
     this.camera.scale = this.smoothScale;
@@ -135,12 +136,34 @@ class Renderer {
     }
 
     if (state.players) {
+      this.updateSmoothPlayers(state.players, myId);
       for (const p of state.players) {
-        this.drawPlayer(ctx, p, p.id === myId);
+        const smooth = this.smoothPlayers[p.id];
+        if (smooth) {
+          this.drawPlayer(ctx, { ...p, x: smooth.x, y: smooth.y }, p.id === myId);
+        }
       }
     }
 
     ctx.restore();
+  }
+
+  updateSmoothPlayers(players, myId) {
+    for (const p of players) {
+      if (!this.smoothPlayers[p.id]) {
+        this.smoothPlayers[p.id] = { x: p.x, y: p.y };
+      } else {
+        const sp = this.smoothPlayers[p.id];
+        const lerp = p.id === myId ? 0.5 : 0.3;
+        sp.x += (p.x - sp.x) * lerp;
+        sp.y += (p.y - sp.y) * lerp;
+      }
+    }
+    for (const id in this.smoothPlayers) {
+      if (!players.find(p => p.id === parseInt(id))) {
+        delete this.smoothPlayers[id];
+      }
+    }
   }
 
   getWorldColor(worldY, mapHeight) {
