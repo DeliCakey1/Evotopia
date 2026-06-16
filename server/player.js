@@ -1,4 +1,4 @@
-const { EVOLUTION_TIERS, MAP_WIDTH, MAP_HEIGHT, GRAVITY, FLAP_VELOCITY, THRUST, DIVE_SPEED, DRAG } = require('./config');
+const { EVOLUTION_TIERS, MAP_WIDTH, MAP_HEIGHT, GRAVITY, LIFT_FORCE, THRUST, DIVE_SPEED, DRAG } = require('./config');
 
 let nextId = 1;
 
@@ -19,6 +19,7 @@ class Player {
     this.dy = 0;
     this.vx = 0;
     this.vy = 0;
+    this.lift = false;
     this.facingRight = true;
     this.alive = true;
   }
@@ -29,8 +30,8 @@ class Player {
     if (dx !== 0) this.facingRight = dx > 0;
   }
 
-  flap() {
-    this.vy = -FLAP_VELOCITY;
+  setLift(v) {
+    this.lift = v;
   }
 
   update() {
@@ -42,6 +43,10 @@ class Player {
 
     if (this.dy > 0) {
       this.vy += DIVE_SPEED;
+    }
+
+    if (this.lift) {
+      this.vy -= LIFT_FORCE;
     }
 
     this.vy += GRAVITY;

@@ -3,18 +3,14 @@ class Input {
     this.keys = {};
     this.dx = 0;
     this.dy = 0;
-    this.flap = false;
     this.lastDx = 0;
     this.lastDy = 0;
+    this.lastLift = false;
 
     document.addEventListener('keydown', (e) => {
-      const key = e.key;
-      if (!e.repeat && (key === 'w' || key === 'W' || key === 'ArrowUp')) {
-        this.flap = true;
-      }
-      this.keys[key] = true;
+      this.keys[e.key] = true;
       this.updateDirection();
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         e.preventDefault();
       }
     });
@@ -31,6 +27,10 @@ class Input {
     });
   }
 
+  get lift() {
+    return !!(this.keys['w'] || this.keys['W'] || this.keys['ArrowUp']);
+  }
+
   updateDirection() {
     this.dx = 0;
     this.dy = 0;
@@ -40,12 +40,12 @@ class Input {
   }
 
   shouldSend() {
-    return this.dx !== this.lastDx || this.dy !== this.lastDy || this.flap;
+    return this.dx !== this.lastDx || this.dy !== this.lastDy || this.lift !== this.lastLift;
   }
 
   markSent() {
     this.lastDx = this.dx;
     this.lastDy = this.dy;
-    this.flap = false;
+    this.lastLift = this.lift;
   }
 }

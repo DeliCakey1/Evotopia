@@ -159,7 +159,7 @@
       updateLeaderboard();
 
       if (input.shouldSend()) {
-        network.sendInput(input.dx, input.dy, input.flap);
+        network.sendInput(input.dx, input.dy, input.lift);
         input.markSent();
       }
     }

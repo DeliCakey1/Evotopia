@@ -67,7 +67,7 @@ wss.on('connection', (ws) => {
       } else if (msg.type === 'input') {
         if (player && player.alive) {
           player.setDirection(msg.dx || 0, msg.dy || 0);
-          if (msg.flap) player.flap();
+          player.setLift(!!msg.lift);
         }
       }
     } catch (e) {
