@@ -33,9 +33,10 @@
   let connected = false;
   let joined = false;
   let lastInputTime = 0;
+  let pendingJoin = false;
 
   const wsProto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const serverHost = wsProto + '//' + location.hostname + ':' + location.port;
+  const serverHost = wsProto + '//' + location.host;
 
   function connect() {
     network.connect(serverHost);
@@ -43,18 +44,24 @@
 
   network.on('connected', () => {
     connected = true;
-    const name = nameInput.value.trim() || 'Player';
-    network.join(name);
+    if (pendingJoin) {
+      pendingJoin = false;
+      const name = nameInput.value.trim() || 'Player';
+      network.join(name);
+    }
   });
 
   network.on('disconnected', () => {
     connected = false;
     joined = false;
+    pendingJoin = false;
     myId = null;
     myPlayer = null;
     startScreen.classList.remove('hidden');
     hud.classList.add('hidden');
     leaderboard.classList.add('hidden');
+    playBtn.textContent = 'Play';
+    playBtn.disabled = false;
   });
 
   network.on('init', (msg) => {
@@ -174,15 +181,13 @@
   });
 
   playBtn.addEventListener('click', () => {
+    if (joined) return;
     if (!connected) {
+      pendingJoin = true;
       connect();
       playBtn.textContent = 'Connecting...';
       playBtn.disabled = true;
-      setTimeout(() => {
-        playBtn.textContent = 'Play';
-        playBtn.disabled = false;
-      }, 3000);
-    } else if (!joined) {
+    } else {
       const name = nameInput.value.trim() || 'Player';
       network.join(name);
     }
@@ -192,8 +197,4 @@
   onResize();
 
   requestAnimationFrame(gameLoop);
-
-  setTimeout(() => {
-    if (!connected) connect();
-  }, 500);
 })();
